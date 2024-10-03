@@ -1,8 +1,8 @@
 // models/user.model.js
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const SubmissionSchema = new mongoose.Schema({
     content: { type: String, required: true }
 });
 
-module.exports = mongoose.model('Submission', SubmissionSchema);
+export default mongoose.model('Submission', SubmissionSchema);

@@ -1,13 +1,16 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+import cors from 'cors';
+import * as dotenv from 'dotenv';
+import express, { json } from 'express';
+import { connect } from 'mongoose';
+import submissionRoutes from './router/submissionRoutes.js';
+
+dotenv.config();
 
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
 // MongoDB Connection
 let isConnected;
@@ -15,7 +18,7 @@ let isConnected;
 const connectToDatabase = async () => {
   if (isConnected) return;
   try {
-    const db = await mongoose.connect(process.env.MONGO_URI, {
+    const db = await connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -33,5 +36,4 @@ app.use(async (req, res, next) => {
 });
 
 // Routes
-const submissionRoutes = require('./router/submissionRoutes');
 app.use('/submission', submissionRoutes);

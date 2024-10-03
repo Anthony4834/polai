@@ -1,10 +1,10 @@
 // routes/user.routes.js
-const express = require('express');
+import express from 'express';
+import { OpenAI } from 'openai';
+import Submission from '../model/submission.js';
 const router = express.Router();
-const Submission = require('../model/submission');
 
-const OpenAI = require('openai/index.mjs');
-const { zodResponseFormat }  = require('../zrf'); // Use the wrapper you created
+import { zodResponseFormat } from '../zrf.js';
 
 const getOpenAIResponse = async (content) => {
     const openai = new OpenAI({
@@ -113,4 +113,4 @@ router.post('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
