@@ -37,3 +37,5 @@ app.use(async (req, res, next) => {
 
 // Routes
 app.use('/submission', submissionRoutes);
+
+export default app;
