@@ -35,5 +35,3 @@ app.use(async (req, res, next) => {
 // Routes
 const submissionRoutes = require('./router/submissionRoutes');
 app.use('/submission', submissionRoutes);
-
-app.listen(3001, () => console.log('Listening');
