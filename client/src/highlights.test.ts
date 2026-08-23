@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+    applyNeutralRewrite,
     calculateBiasPercent,
     createHighlights,
-    replaceBiases,
     type Highlight
 } from './highlights';
 
@@ -26,14 +26,26 @@ describe('createHighlights', () => {
     });
 });
 
-describe('replaceBiases', () => {
-    it('replaces repeated passages by their exact positions', () => {
-        const highlights: Highlight[] = [
-            { start: 0, end: 3, line: 'bad', reason: 'First', fixed: 'neutral', color: 'red' },
-            { start: 7, end: 10, line: 'bad', reason: 'Second', fixed: 'fair', color: 'blue' }
-        ];
+describe('applyNeutralRewrite', () => {
+    it('applies one complete rewrite without stitching per-finding text', () => {
+        const source = 'Biased first line.\nBiased second line.';
+        const neutralText = 'Neutral first line.\nNeutral second line.';
 
-        expect(replaceBiases('bad xx bad', highlights).fixedText).toBe('neutral xx fair');
+        expect(applyNeutralRewrite(source, neutralText)).toBe(neutralText);
+    });
+
+    it('rejects a rewrite that adds lines', () => {
+        expect(() => applyNeutralRewrite(
+            'Biased first line.\nBiased second line.',
+            'Neutral first line.\nNeutral second line.\nBiased second line.'
+        )).toThrow(/line structure/);
+    });
+
+    it('rejects newly duplicated lines even when the line count is unchanged', () => {
+        expect(() => applyNeutralRewrite(
+            'Biased first sentence here.\nBiased second sentence here.',
+            'The neutral replacement sentence.\nThe neutral replacement sentence.'
+        )).toThrow(/duplicate lines/);
     });
 });
 
@@ -45,5 +57,13 @@ describe('calculateBiasPercent', () => {
         ];
 
         expect(calculateBiasPercent('0123456789', highlights)).toBe('80.00');
+    });
+
+    it('reports marked-source coverage rather than bias severity', () => {
+        const highlights: Highlight[] = [
+            { start: 0, end: 10, line: '', reason: '', fixed: '', color: 'red' }
+        ];
+
+        expect(calculateBiasPercent('0123456789', highlights)).toBe('100.00');
     });
 });

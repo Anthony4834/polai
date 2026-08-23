@@ -8,6 +8,10 @@ export const biasResponseFormat = {
             summary: {
                 type: 'string'
             },
+            neutralText: {
+                type: 'string',
+                description: 'One complete neutral rewrite of the user text with the same line structure and no duplicated content.'
+            },
             biases: {
                 type: 'array',
                 items: {
@@ -17,10 +21,12 @@ export const biasResponseFormat = {
                             type: 'string'
                         },
                         line: {
-                            type: 'string'
+                            type: 'string',
+                            description: 'The smallest exact, contiguous source passage that contains the bias.'
                         },
                         fixed: {
-                            type: 'string'
+                            type: 'string',
+                            description: 'A local neutral replacement for line only, without surrounding source text.'
                         }
                     },
                     required: ['reason', 'line', 'fixed'],
@@ -28,7 +34,7 @@ export const biasResponseFormat = {
                 }
             }
         },
-        required: ['summary', 'biases'],
+        required: ['summary', 'neutralText', 'biases'],
         additionalProperties: false
     }
 };

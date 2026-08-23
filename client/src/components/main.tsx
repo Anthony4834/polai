@@ -7,6 +7,7 @@ import { Input } from './input'
 export function Main() {
   const [text, setText] = useState('')
   const [summary, setSummary] = useState('')
+  const [neutralText, setNeutralText] = useState('')
   const [highlights, setHighlights] = useState<Highlight[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [activeHighlight, setActiveHighlight] = useState<number | null>(null)
@@ -36,6 +37,8 @@ export function Main() {
           text={text}
           setText={setText}
           setSummary={setSummary}
+          neutralText={neutralText}
+          setNeutralText={setNeutralText}
           highlights={highlights}
           setHighlights={setHighlights}
           isProcessing={isProcessing}

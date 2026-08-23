@@ -13,6 +13,7 @@ export interface Highlight extends Bias {
 export interface AnalysisResponse {
     summary: string;
     biases: Bias[];
+    neutralText: string;
 }
 
 const HIGHLIGHT_COLORS = [
@@ -72,35 +73,47 @@ export const mergeHighlights = (highlights: Highlight[]) => {
     return merged;
 };
 
-export const replaceBiases = (text: string, highlights: Highlight[]) => {
-    const replacements: Highlight[] = [];
-    let lastEnd = 0;
+const logicalLines = (value: string) => {
+    return value
+        .replace(/\r\n?/g, '\n')
+        .replace(/\n+$/, '')
+        .split('\n');
+};
 
-    for (const highlight of sortValidHighlights(highlights)) {
-        if (highlight.end > text.length || highlight.start < lastEnd) continue;
-        replacements.push(highlight);
-        lastEnd = highlight.end;
+const meaningfulLineCounts = (value: string) => {
+    const counts = new Map<string, number>();
+
+    for (const line of logicalLines(value)) {
+        const normalized = line.trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+        if (normalized.length < 20) continue;
+        counts.set(normalized, (counts.get(normalized) ?? 0) + 1);
     }
 
-    let cursor = 0;
-    let fixedText = '';
-    const newHighlights: Highlight[] = [];
+    return counts;
+};
 
-    for (const highlight of replacements) {
-        fixedText += text.slice(cursor, highlight.start);
-        const start = fixedText.length;
-        fixedText += highlight.fixed;
-
-        newHighlights.push({
-            ...highlight,
-            start,
-            end: fixedText.length
-        });
-        cursor = highlight.end;
+export const applyNeutralRewrite = (text: string, neutralText: string) => {
+    if (!neutralText.trim()) {
+        throw new Error('The neutral rewrite was empty.');
     }
 
-    fixedText += text.slice(cursor);
-    return { fixedText, newHighlights };
+    if (logicalLines(text).length !== logicalLines(neutralText).length) {
+        throw new Error('The neutral rewrite changed the source line structure.');
+    }
+
+    const maximumLength = Math.max(text.length * 2, text.length + 120);
+    if (neutralText.length > maximumLength) {
+        throw new Error('The neutral rewrite was unexpectedly long.');
+    }
+
+    const sourceCounts = meaningfulLineCounts(text);
+    for (const [line, count] of meaningfulLineCounts(neutralText)) {
+        if (count > 1 && count > (sourceCounts.get(line) ?? 0)) {
+            throw new Error('The neutral rewrite introduced duplicate lines.');
+        }
+    }
+
+    return neutralText;
 };
 
 export const calculateBiasPercent = (text: string, highlights: Highlight[]) => {

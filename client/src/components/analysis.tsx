@@ -51,7 +51,7 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
           <section className="analysis-summary" aria-labelledby="summary-title">
             <p className="summary-measure">
               <strong>{percentage}%</strong>
-              <span>of text marked</span>
+              <span>of source text flagged — coverage, not severity</span>
             </p>
             <h3 id="summary-title">Summary</h3>
             <p>{summary}</p>

@@ -10,10 +10,17 @@ figures, parties, or ideologies.
 Flag subjective language, unbalanced framing, or speculation that favors or
 criticizes a political target. Do not flag bias about unrelated topics.
 
+Return neutralText as one complete neutral rewrite of the user's full text.
+Preserve the exact number and order of lines. Do not repeat, remove, or append
+unrelated content. If there is no political bias, copy the user's text exactly.
+
 For each biased passage:
-- Copy the source line exactly into the line field.
+- Copy the smallest exact contiguous source passage into the line field.
 - Explain the political bias in the reason field.
-- Put a neutral rewrite in the fixed field.
+- Put only a local replacement for line in the fixed field. Never include
+  surrounding source text in fixed.
+- Do not return overlapping passages. Combine multiple issues in the same
+  passage into one finding and one local replacement.
 
 If the text has no political bias, use this exact summary:
 "This text contains no political bias."
@@ -51,6 +58,47 @@ export const parseAnalysisResponse = response => {
     return JSON.parse(response.output_text);
 };
 
+const logicalLines = value => value
+    .replace(/\r\n?/g, '\n')
+    .replace(/\n+$/, '')
+    .split('\n');
+
+const meaningfulLineCounts = value => {
+    const counts = new Map();
+
+    for (const line of logicalLines(value)) {
+        const normalized = line.trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+        if (normalized.length < 20) continue;
+        counts.set(normalized, (counts.get(normalized) ?? 0) + 1);
+    }
+
+    return counts;
+};
+
+export const validateNeutralText = (source, neutralText) => {
+    if (typeof neutralText !== 'string' || !neutralText.trim()) {
+        throw new Error('OpenAI returned an empty neutral rewrite.');
+    }
+
+    if (logicalLines(source).length !== logicalLines(neutralText).length) {
+        throw new Error('OpenAI changed the source line structure.');
+    }
+
+    const maximumLength = Math.max(source.length * 2, source.length + 120);
+    if (neutralText.length > maximumLength) {
+        throw new Error('OpenAI returned an unexpectedly long neutral rewrite.');
+    }
+
+    const sourceCounts = meaningfulLineCounts(source);
+    for (const [line, count] of meaningfulLineCounts(neutralText)) {
+        if (count > 1 && count > (sourceCounts.get(line) ?? 0)) {
+            throw new Error('OpenAI introduced duplicate lines in the neutral rewrite.');
+        }
+    }
+
+    return neutralText;
+};
+
 export const analyzeBias = async (content, client = getOpenAIClient()) => {
     const response = await client.responses.create({
         model: MODEL,
@@ -63,5 +111,9 @@ export const analyzeBias = async (content, client = getOpenAIClient()) => {
         store: false
     });
 
-    return parseAnalysisResponse(response);
+    const analysis = parseAnalysisResponse(response);
+    return {
+        ...analysis,
+        neutralText: validateNeutralText(content, analysis.neutralText)
+    };
 };

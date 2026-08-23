@@ -1,9 +1,9 @@
 import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
 
 import {
+  applyNeutralRewrite,
   createHighlights,
   mergeHighlights,
-  replaceBiases,
   type AnalysisResponse,
   type Highlight,
 } from '../highlights'
@@ -12,7 +12,9 @@ const isAnalysisResponse = (value: unknown): value is AnalysisResponse => {
   if (!value || typeof value !== 'object') return false
 
   const response = value as Partial<AnalysisResponse>
-  return typeof response.summary === 'string' && Array.isArray(response.biases)
+  return typeof response.summary === 'string'
+    && Array.isArray(response.biases)
+    && typeof response.neutralText === 'string'
 }
 
 const analyzeText = async (content: string) => {
@@ -42,6 +44,7 @@ const analyzeText = async (content: string) => {
   return {
     summary: payload.summary,
     highlights: createHighlights(content, payload.biases),
+    neutralText: payload.neutralText,
   }
 }
 
@@ -103,6 +106,8 @@ interface InputProps {
   isProcessing: boolean
   setIsProcessing: (isProcessing: boolean) => void
   setSummary: (summary: string) => void
+  neutralText: string
+  setNeutralText: (text: string) => void
   activeHighlight: number | null
   setActiveHighlight: (index: number | null) => void
   onAnalysisComplete: () => void
@@ -116,6 +121,8 @@ export function Input({
   isProcessing,
   setIsProcessing,
   setSummary,
+  neutralText,
+  setNeutralText,
   activeHighlight,
   setActiveHighlight,
   onAnalysisComplete,
@@ -128,6 +135,7 @@ export function Input({
   const resetAnalysis = () => {
     setHighlights([])
     setSummary('')
+    setNeutralText('')
     setLastAnalyzed('')
     setError('')
     setActiveHighlight(null)
@@ -141,6 +149,7 @@ export function Input({
       const result = await analyzeText(text)
       setHighlights(result.highlights)
       setSummary(result.summary)
+      setNeutralText(result.neutralText)
       setLastAnalyzed(text)
       setActiveHighlight(result.highlights.length > 0 ? 0 : null)
       onAnalysisComplete()
@@ -155,12 +164,16 @@ export function Input({
   }
 
   const handleApplySuggestions = () => {
-    const { fixedText } = replaceBiases(text, highlights)
-    setText(fixedText)
-    setLastAnalyzed('')
-    setHighlights([])
-    setActiveHighlight(null)
-    setSummary('Suggested neutral wording was applied.')
+    try {
+      setText(applyNeutralRewrite(text, neutralText))
+      setLastAnalyzed('')
+      setHighlights([])
+      setActiveHighlight(null)
+      setNeutralText('')
+      setSummary('Suggested neutral wording was applied.')
+    } catch {
+      setError('The suggested rewrite could not be applied safely. Run the analysis again.')
+    }
   }
 
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
@@ -212,7 +225,7 @@ export function Input({
             : 'Your text stays editable after review.'}
         </p>
         <div className="editor-actions">
-          {highlights.length > 0 ? (
+          {highlights.length > 0 && neutralText ? (
             <button
               className="button button-secondary"
               type="button"
