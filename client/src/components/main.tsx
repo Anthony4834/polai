@@ -22,6 +22,15 @@ export function Main() {
     analysisRef.current?.scrollIntoView({ behavior, block: 'start' })
   }
 
+  const showFindingFromSource = (index: number | null) => {
+    setActiveHighlight(index)
+    if (index === null) return
+
+    analysisRef.current
+      ?.querySelector<HTMLElement>(`[data-finding-index="${index}"]`)
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }
+
   return (
     <div className="app-shell">
       <header className="masthead">
@@ -44,6 +53,7 @@ export function Main() {
           setIsProcessing={setIsProcessing}
           activeHighlight={activeHighlight}
           setActiveHighlight={setActiveHighlight}
+          onSourceHighlightHover={showFindingFromSource}
           onAnalysisComplete={showAnalysis}
         />
         <Analysis
@@ -53,7 +63,6 @@ export function Main() {
           highlights={highlights}
           isProcessing={isProcessing}
           activeHighlight={activeHighlight}
-          onHighlightFocus={setActiveHighlight}
         />
       </main>
     </div>

@@ -102,7 +102,7 @@ components:
 
 **Creative North Star: "Condition Report"**
 
-PolAI is a calm, exact writing instrument. The source text is the interface, not content placed inside an ornamental application shell. The visual system borrows the discipline of an archival condition report: matte inspection paper, compact labels, hairline rules, and numbered observations that appear only where attention is required.
+PolAI is a calm, exact writing instrument. The source text is the interface, not content placed inside an ornamental application shell. The visual system borrows the discipline of an archival condition report: matte inspection paper, compact labels, hairline rules, and source-linked observations that appear only where attention is required.
 
 The interface stays neutral and nonpartisan. Mineral green carries actions and focus. Cool graphite and warm stone distinguish linked findings without implying success, warning, political side, confidence, or severity. Space, scale, and alignment create hierarchy before containers or decoration do.
 
@@ -111,7 +111,7 @@ The interface stays neutral and nonpartisan. Mineral green carries actions and f
 - Continuous, editor-first workspace with a narrow evidence rail.
 - Matte paper surfaces separated by hairline rules, with no elevation.
 - System sans typography that shifts from generous reading copy to compact inspection labels.
-- Exact source spans linked to numbered findings by matching cool graphite or warm stone treatments.
+- Exact source spans linked to findings by matching cool graphite or warm stone treatments.
 - Direct, neutral controls that keep every revision under the writer's control.
 
 ## Colors
@@ -143,7 +143,7 @@ The palette feels like warm paper and inspection ink: restrained neutrals, one m
 
 **The Nonpartisan Color Rule.** Evidence colors only link passages to findings. They must not reuse action, success, warning, error, or partisan colors.
 
-**The Matched Evidence Rule.** Every marked source span and its corresponding finding use the same fill and edge treatment, with explicit numbering and labels as non-color cues.
+**The Matched Evidence Rule.** Every marked source span and its corresponding finding use the same fill and edge treatment, with the exact quoted phrase and explicit labels as non-color cues.
 
 **The Paper Restraint Rule.** Large surfaces stay within the paper neutrals. Accent fills belong to compact evidence and state treatments.
 
@@ -191,9 +191,9 @@ The system has no elevation shadows. Depth comes from tonal layering between Pap
 
 ## Shapes
 
-The form language is rectilinear and exact. Text marks and phrase controls use gently eased 2px corners; action controls use 3px corners. Large panes, summaries, and finding rows have square edges. Pills are reserved for short category tags, and circles are reserved for numbered finding indices and loading indicators.
+The form language is rectilinear and exact. Text marks and phrase bands use gently eased 2px corners; action controls use 3px corners. Large panes, summaries, and finding rows have square edges. Pills are reserved for short category tags, and circles are reserved for loading indicators.
 
-**The Exception Shape Rule.** Rounded silhouettes must explain status, index, or compact interaction; they are not decorative containers.
+**The Exception Shape Rule.** Rounded silhouettes must explain status or compact interaction; they are not decorative containers.
 
 ## Components
 
@@ -226,9 +226,9 @@ The form language is rectilinear and exact. Text marks and phrase controls use g
 
 ### Findings
 
-- **Character:** Numbered inspection notes linked directly to exact source spans.
-- **Structure:** Each row contains a highlighted phrase control, a reason, and a separately labeled neutral replacement. A fixed number column aligns to the phrase's first line when text wraps.
-- **State:** Hover or keyboard focus strengthens the phrase edge; the active row receives the same edge color as its source mark.
+- **Character:** Inspection notes linked directly to exact source spans.
+- **Structure:** Each row contains the highlighted phrase, a reason, and a separately labeled neutral replacement. Supporting content aligns directly with the phrase instead of sitting in a decorative index column.
+- **State:** Hovering a marked source phrase reveals and activates its matching row. The quoted finding itself has no hover treatment because it is selectable content, not a control.
 - **Separation:** Rows use hairlines and spacing rather than individual cards.
 
 ### Empty, Loading, and Error States
@@ -242,7 +242,7 @@ The form language is rectilinear and exact. Text marks and phrase controls use g
 ### Do:
 
 - **Do** keep source text visually dominant and editable throughout review.
-- **Do** connect every finding to its exact phrase with matched tone, edge, number, and label.
+- **Do** connect every finding to its exact phrase with matched tone, edge, quoted text, and label.
 - **Do** use paper tone, hairline rules, and spacing to organize the workspace.
 - **Do** keep explanations and suggested neutral wording compact, direct, and scannable.
 - **Do** preserve visible focus, sufficient contrast, semantic regions, and reduced-motion-safe behavior.

@@ -13,7 +13,6 @@ interface AnalysisProps {
   highlights: Highlight[]
   isProcessing: boolean
   activeHighlight: number | null
-  onHighlightFocus: (index: number | null) => void
 }
 
 export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis(
@@ -23,7 +22,6 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
     highlights,
     isProcessing,
     activeHighlight,
-    onHighlightFocus,
   },
   ref,
 ) {
@@ -69,7 +67,7 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
                 <h3 id="findings-title">Findings</h3>
                 <span>{highlights.length}</span>
               </div>
-              <ol className="finding-list">
+              <ul className="finding-list">
                 {highlights.map((highlight, index) => {
                   const style = {
                     '--finding-fill': highlight.color,
@@ -81,20 +79,9 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
                       className={activeHighlight === index ? 'finding is-active' : 'finding'}
                       key={`${highlight.start}-${highlight.end}-${highlight.line}`}
                       style={style}
-                      onMouseEnter={() => onHighlightFocus(index)}
+                      data-finding-index={index}
                     >
-                      <button
-                        className="finding-phrase"
-                        type="button"
-                        onFocus={() => onHighlightFocus(index)}
-                        onClick={() => onHighlightFocus(index)}
-                        aria-label={`Finding ${index + 1}: ${highlight.line}`}
-                      >
-                        <span className="finding-number" aria-hidden="true">
-                          {index + 1}
-                        </span>
-                        <span>“{highlight.line}”</span>
-                      </button>
+                      <p className="finding-phrase">“{highlight.line}”</p>
                       <ul className="finding-categories" aria-label="Bias categories">
                         {highlight.categories.map(category => (
                           <li key={category}>{BIAS_CATEGORY_LABELS[category]}</li>
@@ -108,7 +95,7 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
                     </li>
                   )
                 })}
-              </ol>
+              </ul>
             </section>
           ) : null}
         </div>

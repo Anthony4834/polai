@@ -88,6 +88,7 @@ const getHighlightedText = (
       parts.push(
         <mark
           className={sourceIndex === activeHighlight ? 'text-mark is-active' : 'text-mark'}
+          data-highlight-index={sourceIndex}
           key={`highlight-${start}-${end}`}
           style={style}
         >
@@ -119,6 +120,7 @@ interface InputProps {
   setNeutralText: (text: string) => void
   activeHighlight: number | null
   setActiveHighlight: (index: number | null) => void
+  onSourceHighlightHover: (index: number | null) => void
   onAnalysisComplete: () => void
 }
 
@@ -134,10 +136,12 @@ export function Input({
   setNeutralText,
   activeHighlight,
   setActiveHighlight,
+  onSourceHighlightHover,
   onAnalysisComplete,
 }: InputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
+  const hoveredHighlightRef = useRef<number | null>(null)
   const [lastAnalyzed, setLastAnalyzed] = useState('')
   const [error, setError] = useState('')
 
@@ -150,6 +154,34 @@ export function Input({
     setActiveHighlight(null)
   }
 
+  const updateHoveredHighlight = (index: number | null) => {
+    if (hoveredHighlightRef.current === index) return
+
+    hoveredHighlightRef.current = index
+    onSourceHighlightHover(index)
+  }
+
+  const handleSourceHover = (clientX: number, clientY: number, buttons: number) => {
+    if (!overlayRef.current || buttons !== 0) {
+      updateHoveredHighlight(null)
+      return
+    }
+
+    const hoveredMark = Array.from(
+      overlayRef.current.querySelectorAll<HTMLElement>('[data-highlight-index]'),
+    ).find(mark => Array.from(mark.getClientRects()).some(rect => (
+      clientX >= rect.left
+      && clientX <= rect.right
+      && clientY >= rect.top
+      && clientY <= rect.bottom
+    )))
+
+    const hoveredIndex = hoveredMark
+      ? Number(hoveredMark.dataset.highlightIndex)
+      : null
+    updateHoveredHighlight(Number.isInteger(hoveredIndex) ? hoveredIndex : null)
+  }
+
   const handleAnalyze = async () => {
     setIsProcessing(true)
     setError('')
@@ -160,7 +192,7 @@ export function Input({
       setSummary(result.summary)
       setNeutralText(result.neutralText)
       setLastAnalyzed(text)
-      setActiveHighlight(result.highlights.length > 0 ? 0 : null)
+      setActiveHighlight(null)
       onAnalysisComplete()
     } catch (analysisError) {
       const message = analysisError instanceof Error
@@ -214,6 +246,10 @@ export function Input({
             overlayRef.current.scrollTop = textareaRef.current.scrollTop
             overlayRef.current.scrollLeft = textareaRef.current.scrollLeft
           }}
+          onMouseMove={event => {
+            handleSourceHover(event.clientX, event.clientY, event.buttons)
+          }}
+          onMouseLeave={() => updateHoveredHighlight(null)}
           placeholder="Paste an article, post, speech, or draft to review for political bias."
           aria-label="Text to review"
           spellCheck

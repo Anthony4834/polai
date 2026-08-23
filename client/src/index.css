@@ -468,12 +468,10 @@ button,
 }
 
 .finding-phrase {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  align-items: start;
-  gap: 9px;
+  display: block;
   width: 100%;
-  padding: 7px 9px 8px 7px;
+  margin: 0;
+  padding: 7px 9px 8px;
   border: 0;
   border-radius: 2px;
   color: var(--ink);
@@ -483,30 +481,7 @@ button,
   font-weight: 600;
   line-height: 1.45;
   text-align: left;
-  cursor: pointer;
   box-shadow: 0 0 0 1px var(--finding-edge);
-}
-
-.finding-phrase:hover {
-  box-shadow: 0 0 0 2px var(--finding-edge);
-}
-
-.finding-number {
-  display: inline-flex;
-  flex: 0 0 21px;
-  align-items: center;
-  justify-content: center;
-  width: 21px;
-  height: 21px;
-  border: 1px solid var(--finding-edge);
-  border-radius: 50%;
-  color: var(--ink);
-  background: var(--paper);
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.65rem;
-  font-weight: 760;
-  line-height: 1;
-  margin-top: 1px;
 }
 
 .finding-categories {
@@ -514,7 +489,7 @@ button,
   flex-wrap: wrap;
   gap: 6px;
   padding: 0;
-  margin: 13px 0 0 32px;
+  margin: 13px 0 0;
   list-style: none;
 }
 
@@ -531,7 +506,7 @@ button,
 }
 
 .finding-reason {
-  margin: 15px 0 0 32px;
+  margin: 15px 0 0;
   color: #4f5450;
   font-size: 0.84rem;
   line-height: 1.58;
@@ -539,7 +514,7 @@ button,
 }
 
 .neutral-wording {
-  margin: 20px 0 0 32px;
+  margin: 20px 0 0;
   padding-left: 12px;
   border-left: 1px solid var(--rule-strong);
 }
