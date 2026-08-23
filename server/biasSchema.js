@@ -8,10 +8,6 @@ export const biasResponseFormat = {
             summary: {
                 type: 'string'
             },
-            neutralText: {
-                type: 'string',
-                description: 'One complete neutral rewrite of the user text with the same line structure and no duplicated content.'
-            },
             biases: {
                 type: 'array',
                 items: {
@@ -49,7 +45,7 @@ export const biasResponseFormat = {
                 }
             }
         },
-        required: ['summary', 'neutralText', 'biases'],
+        required: ['summary', 'biases'],
         additionalProperties: false
     }
 };

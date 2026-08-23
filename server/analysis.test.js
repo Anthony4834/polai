@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
     analyzeBias,
+    buildNeutralText,
     MODEL,
     parseAnalysisResponse,
     validateNeutralText
@@ -22,7 +23,6 @@ test('uses Responses with the Luna classification settings', async () => {
                     output: [],
                     output_text: JSON.stringify({
                         summary: 'Clear.',
-                        neutralText: 'Source text.',
                         biases: []
                     })
                 };
@@ -33,9 +33,10 @@ test('uses Responses with the Luna classification settings', async () => {
     await analyzeBias('Source text.', client);
 
     assert.equal(request.model, 'gpt-5.6-luna');
-    assert.deepEqual(request.reasoning, { effort: 'none' });
+    assert.deepEqual(request.reasoning, { effort: 'low' });
     assert.equal(request.text.format.type, 'json_schema');
-    assert.ok(request.text.format.schema.required.includes('neutralText'));
+    assert.ok(!request.text.format.schema.required.includes('neutralText'));
+    assert.ok(!('neutralText' in request.text.format.schema.properties));
     const findingSchema = request.text.format.schema.properties.biases.items;
     assert.ok(findingSchema.required.includes('categories'));
     assert.deepEqual(findingSchema.properties.categories.items.enum, [
@@ -45,14 +46,16 @@ test('uses Responses with the Luna classification settings', async () => {
         'unsupported_speculation',
         'partisan_asymmetry'
     ]);
-    assert.match(request.input[0].content, /one complete neutral rewrite/i);
     assert.match(request.input[0].content, /Never include\s+surrounding source text in fixed/i);
     assert.match(request.input[0].content, /Political bias is not the same as criticism/i);
     assert.match(request.input[0].content, /A false statement concerns whether[\s\S]*a lie additionally asserts knowledge or intent/i);
     assert.match(request.input[0].content, /Do not flag words such as "false," "inaccurate," or "misleading" merely/i);
     assert.match(request.input[0].content, /Distinguish the author's narration from direct quotations/i);
     assert.match(request.input[0].content, /Do not infer partisan bias from criticism of one politician/i);
-    assert.match(request.input[0].content, /Preserve factual conclusions, counts, qualifications/i);
+    assert.match(request.input[0].content, /does not need praise or a\s+list of accurate statements for balance/i);
+    assert.match(request.input[0].content, /Do not use this category\s+for knowledge, motive, or intent/i);
+    assert.match(request.input[0].content, /Never replace "false," "falsehood,"\s+"lie," or "misleading" with an unqualified "claim"/i);
+    assert.match(request.input[0].content, /moderate: one strong intent claim or two to three loaded findings/i);
     assert.equal(request.store, false);
 });
 
@@ -68,16 +71,76 @@ test('parses a completed structured response', () => {
         output: [],
         output_text: JSON.stringify({
             summary: 'Clear.',
-            neutralText: 'Source text.',
             biases
         })
     });
 
     assert.deepEqual(result, {
         summary: 'Clear.',
-        neutralText: 'Source text.',
         biases
     });
+});
+
+test('builds a neutral rewrite only from displayed findings', () => {
+    const source = 'A lying spree. This is false for two documented reasons.';
+    const biases = [{
+        categories: ['loaded_language', 'intent_attribution'],
+        reason: 'It assigns intent.',
+        line: 'lying spree',
+        fixed: 'series of claims the review found false'
+    }];
+
+    assert.equal(
+        buildNeutralText(source, biases),
+        'A series of claims the review found false. This is false for two documented reasons.'
+    );
+});
+
+test('replaces repeated passages in source order', () => {
+    const source = 'The old favorite returned. Another old favorite returned.';
+    const biases = [
+        { line: 'old favorite', fixed: 'recurring claim' },
+        { line: 'old favorite', fixed: 'previous claim' }
+    ];
+
+    assert.equal(
+        buildNeutralText(source, biases),
+        'The recurring claim returned. Another previous claim returned.'
+    );
+});
+
+test('rejects findings that do not exactly match the source', () => {
+    assert.throws(
+        () => buildNeutralText('Exact source.', [{ line: 'Different source', fixed: 'Neutral text' }]),
+        /does not match the source text/
+    );
+});
+
+test('rejects overlapping findings', () => {
+    assert.throws(
+        () => buildNeutralText('false claim after false claim', [
+            { line: 'false claim after false claim', fixed: 'repeated claims found false' },
+            { line: 'false claim', fixed: 'claim found false' }
+        ]),
+        /overlapping source passages/
+    );
+});
+
+test('rejects local replacements that change line structure', () => {
+    assert.throws(
+        () => buildNeutralText('loaded wording', [{ line: 'loaded wording', fixed: 'neutral\nwording' }]),
+        /line structure in a local replacement/
+    );
+});
+
+test('rejects local replacements that remove reported truth status', () => {
+    assert.throws(
+        () => buildNeutralText('a dizzying series of false claims', [{
+            line: 'dizzying series of false claims',
+            fixed: 'a series of claims'
+        }]),
+        /removed the reported truth status/
+    );
 });
 
 test('rejects a neutral rewrite that adds source lines', () => {
