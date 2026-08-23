@@ -4,16 +4,27 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/polai/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>pol.ai</title>
-    <script type="module" crossorigin src="/polai/assets/index-W1x1btMi.js"></script>
-    <link rel="stylesheet" crossorigin href="/polai/assets/index-CiHkVM4k.css">
+    <script>
+      try {
+        const theme = window.localStorage.getItem('polai-theme')
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme
+        }
+      } catch {
+        // The system theme remains the default when browser storage is unavailable.
+      }
+    </script>
+    <script type="module" crossorigin src="/polai/assets/index-BEPxTnfB.js"></script>
+    <link rel="stylesheet" crossorigin href="/polai/assets/index-C1q1lRO3.css">
   </head>
   <body>
     <!--
     THESIS: PolAI is a condition report for prose; the source text is the artifact, and the category-default rounded dashboard is refused.
-    OWN-WORLD: Cool paper #FDFCFA, ink #171A18, mineral green #315443, mint #E4EEE5, and amber #FDF2DF; matte surfaces, hairline rules, and nearly square controls.
+    OWN-WORLD: Warm inspection paper or charcoal, near-black or off-white ink, muted mineral green actions, and neutral graphite/stone evidence colors; matte surfaces, hairline rules, and nearly square controls.
     STORY: Write or paste text, run analysis, connect every finding to its exact mark, then apply neutral wording.
-    FIRST VIEWPORT: A 64px masthead sits above a continuous 58/42 workspace; editor left, analysis rail right, compact primary action at editor's lower right.
+    FIRST VIEWPORT: A compact descriptive masthead sits above a continuous 58/42 workspace; editor left, analysis rail right, compact primary action at editor's lower right.
     FORM: Condition Report, grounded direction 4, seed 3d60cd0a.
     FINISH: Unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and provenance for every shipping raster.
     -->
