@@ -9,8 +9,8 @@ import {
 describe('createHighlights', () => {
     it('matches repeated lines in source order', () => {
         const highlights = createHighlights('Bad.\nBad.', [
-            { line: 'Bad.', reason: 'First', fixed: 'Neutral.' },
-            { line: 'Bad.', reason: 'Second', fixed: 'Fair.' }
+            { categories: ['loaded_language'], line: 'Bad.', reason: 'First', fixed: 'Neutral.' },
+            { categories: ['loaded_language'], line: 'Bad.', reason: 'Second', fixed: 'Fair.' }
         ]);
 
         expect(highlights.map(({ start, end }) => ({ start, end }))).toEqual([
@@ -21,8 +21,19 @@ describe('createHighlights', () => {
 
     it('skips a line that is not present in the source', () => {
         expect(createHighlights('Source text.', [
-            { line: 'Different text.', reason: 'Missing', fixed: 'Fixed.' }
+            { categories: ['loaded_language'], line: 'Different text.', reason: 'Missing', fixed: 'Fixed.' }
         ])).toEqual([]);
+    });
+
+    it('keeps distinct classification labels for a finding', () => {
+        const [highlight] = createHighlights('Lying spree.', [{
+            categories: ['loaded_language', 'intent_attribution', 'loaded_language'],
+            line: 'Lying spree.',
+            reason: 'Loaded wording that also attributes intent.',
+            fixed: 'Repeated false statements.',
+        }]);
+
+        expect(highlight.categories).toEqual(['loaded_language', 'intent_attribution']);
     });
 });
 
@@ -52,8 +63,8 @@ describe('applyNeutralRewrite', () => {
 describe('calculateBiasPercent', () => {
     it('does not count overlapping highlights twice', () => {
         const highlights: Highlight[] = [
-            { start: 0, end: 6, line: '', reason: '', fixed: '', color: 'red' },
-            { start: 4, end: 8, line: '', reason: '', fixed: '', color: 'blue' }
+            { categories: ['loaded_language'], start: 0, end: 6, line: '', reason: '', fixed: '', color: 'red' },
+            { categories: ['intent_attribution'], start: 4, end: 8, line: '', reason: '', fixed: '', color: 'blue' }
         ];
 
         expect(calculateBiasPercent('0123456789', highlights)).toBe('80.00');
@@ -61,7 +72,7 @@ describe('calculateBiasPercent', () => {
 
     it('reports marked-source coverage rather than bias severity', () => {
         const highlights: Highlight[] = [
-            { start: 0, end: 10, line: '', reason: '', fixed: '', color: 'red' }
+            { categories: ['loaded_language'], start: 0, end: 10, line: '', reason: '', fixed: '', color: 'red' }
         ];
 
         expect(calculateBiasPercent('0123456789', highlights)).toBe('100.00');

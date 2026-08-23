@@ -1,4 +1,20 @@
+export const BIAS_CATEGORY_LABELS = {
+    loaded_language: 'Loaded language',
+    intent_attribution: 'Intent attribution',
+    unbalanced_framing: 'Unbalanced framing',
+    unsupported_speculation: 'Unsupported speculation',
+    partisan_asymmetry: 'Partisan asymmetry'
+} as const;
+
+export type BiasCategory = keyof typeof BIAS_CATEGORY_LABELS;
+
+export const isBiasCategory = (value: unknown): value is BiasCategory => {
+    return typeof value === 'string'
+        && Object.prototype.hasOwnProperty.call(BIAS_CATEGORY_LABELS, value);
+};
+
 export interface Bias {
+    categories: BiasCategory[];
     line: string;
     reason: string;
     fixed: string;
@@ -40,6 +56,7 @@ export const createHighlights = (text: string, biases: Bias[]) => {
 
         return [{
             ...bias,
+            categories: [...new Set(bias.categories)],
             start,
             end: start + bias.line.length,
             color: HIGHLIGHT_COLORS[index % HIGHLIGHT_COLORS.length]
@@ -59,6 +76,7 @@ export const mergeHighlights = (highlights: Highlight[]) => {
             previous = {
                 ...previous,
                 end: Math.max(previous.end, current.end),
+                categories: [...new Set([...previous.categories, ...current.categories])],
                 reason: `${previous.reason}\n${current.reason}`,
                 fixed: `${previous.fixed}\n${current.fixed}`
             };

@@ -7,26 +7,70 @@ const SYSTEM_PROMPT = `
 Analyze the user's text for political bias related to United States political
 figures, parties, or ideologies.
 
-Flag subjective language, unbalanced framing, or speculation that favors or
-criticizes a political target. Do not flag bias about unrelated topics.
+Political bias is not the same as criticism, an unfavorable fact, or a firm
+fact-check conclusion. Flag only passages that use politically relevant loaded
+language, attribute unsupported intent, frame the submitted evidence
+asymmetrically, make unsupported speculation, or demonstrate partisan
+asymmetry.
 
-Return neutralText as one complete neutral rewrite of the user's full text.
-Preserve the exact number and order of lines. Do not repeat, remove, or append
-unrelated content. If there is no political bias, copy the user's text exactly.
+Evaluate each candidate passage using these distinctions:
+- loaded_language: emotive, sensational, mocking, dismissive, or rhetorically
+  intensified wording that pushes the reader toward a political judgment.
+- intent_attribution: a claim about a person's knowledge, motive, or intent
+  that the submitted text does not support. A false statement concerns whether
+  a proposition is true; a lie additionally asserts knowledge or intent.
+- unbalanced_framing: selective emphasis or unequal treatment within the
+  submitted text that materially changes how a political target is presented.
+- unsupported_speculation: a politically favorable or unfavorable inference
+  presented without support in the submitted text.
+- partisan_asymmetry: demonstrably different standards for political parties,
+  ideologies, or comparable political figures within the submitted text.
 
-For each biased passage:
+Fact-check judgments and terminology choices are assessment checkpoints, not
+bias categories by themselves:
+- Do not flag words such as "false," "inaccurate," or "misleading" merely
+  because they are categorical or unfavorable. Assess whether the submitted
+  text supplies reasons or attribution for the conclusion. You are evaluating
+  writing, not independently fact-checking it with outside knowledge.
+- Do not infer partisan bias from criticism of one politician or from the
+  politician's party. Partisan bias requires comparative evidence in the
+  submitted text.
+- Distinguish the author's narration from direct quotations. Do not attribute
+  a quoted speaker's terminology or rhetoric to the author unless the author's
+  selection or surrounding framing creates a separate issue.
+- A terminology difference, including different terms for immigration status,
+  is not political bias without additional evaluative framing.
+- Scope words such as "alone" are not loaded merely because they emphasize an
+  accurate sample boundary.
+
+Return only genuine bias findings in biases. For each finding:
+- Put every applicable category in categories. Use only loaded_language,
+  intent_attribution, unbalanced_framing, unsupported_speculation, or
+  partisan_asymmetry.
 - Copy the smallest exact contiguous source passage into the line field.
-- Explain the political bias in the reason field.
+- Explain the specific bias and the evidence for that classification in the
+  reason field. Do not call wording merely "subjective" when a more precise
+  explanation is available.
 - Put only a local replacement for line in the fixed field. Never include
   surrounding source text in fixed.
 - Do not return overlapping passages. Combine multiple issues in the same
-  passage into one finding and one local replacement.
+  passage into one finding, one categories array, and one local replacement.
+
+Return neutralText as one complete neutral rewrite of the user's full text.
+Preserve the exact number and order of lines. Do not repeat, remove, or append
+unrelated content. Change only what is necessary to resolve returned bias
+findings. Preserve factual conclusions, counts, qualifications, chronology,
+scope, and direct quotations. Prefer precise attribution over deleting a
+supported or reported truth judgment. If there is no political bias, copy the
+user's text exactly.
 
 If the text has no political bias, use this exact summary:
 "This text contains no political bias."
 
-If the text has political bias, state its strength, target, and whether the
-text favors or criticizes that target in the summary.
+If the text has political bias, state its strength, target, direction, and the
+demonstrated category or categories. Describe loaded or adversarial framing as
+such. Do not call it partisan bias unless a partisan_asymmetry finding is
+supported by comparative evidence in the submitted text.
 `.trim();
 
 let openaiClient;

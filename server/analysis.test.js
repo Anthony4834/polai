@@ -36,26 +36,47 @@ test('uses Responses with the Luna classification settings', async () => {
     assert.deepEqual(request.reasoning, { effort: 'none' });
     assert.equal(request.text.format.type, 'json_schema');
     assert.ok(request.text.format.schema.required.includes('neutralText'));
+    const findingSchema = request.text.format.schema.properties.biases.items;
+    assert.ok(findingSchema.required.includes('categories'));
+    assert.deepEqual(findingSchema.properties.categories.items.enum, [
+        'loaded_language',
+        'intent_attribution',
+        'unbalanced_framing',
+        'unsupported_speculation',
+        'partisan_asymmetry'
+    ]);
     assert.match(request.input[0].content, /one complete neutral rewrite/i);
     assert.match(request.input[0].content, /Never include\s+surrounding source text in fixed/i);
+    assert.match(request.input[0].content, /Political bias is not the same as criticism/i);
+    assert.match(request.input[0].content, /A false statement concerns whether[\s\S]*a lie additionally asserts knowledge or intent/i);
+    assert.match(request.input[0].content, /Do not flag words such as "false," "inaccurate," or "misleading" merely/i);
+    assert.match(request.input[0].content, /Distinguish the author's narration from direct quotations/i);
+    assert.match(request.input[0].content, /Do not infer partisan bias from criticism of one politician/i);
+    assert.match(request.input[0].content, /Preserve factual conclusions, counts, qualifications/i);
     assert.equal(request.store, false);
 });
 
 test('parses a completed structured response', () => {
+    const biases = [{
+        categories: ['loaded_language', 'intent_attribution'],
+        reason: 'The wording is loaded and asserts deceptive intent.',
+        line: 'lying spree',
+        fixed: 'series of statements that the review found false'
+    }];
     const result = parseAnalysisResponse({
         status: 'completed',
         output: [],
         output_text: JSON.stringify({
             summary: 'Clear.',
             neutralText: 'Source text.',
-            biases: []
+            biases
         })
     });
 
     assert.deepEqual(result, {
         summary: 'Clear.',
         neutralText: 'Source text.',
-        biases: []
+        biases
     });
 });
 

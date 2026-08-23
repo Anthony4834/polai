@@ -517,6 +517,28 @@ textarea:focus-visible {
   line-height: 1;
 }
 
+.finding-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 13px 0 0 32px;
+  list-style: none;
+}
+
+.finding-categories li {
+  padding: 4px 7px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  color: var(--ink-muted);
+  background: var(--paper);
+  font-size: 0.61rem;
+  font-weight: 720;
+  letter-spacing: 0.055em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .finding-reason {
   margin: 15px 0 0 32px;
   color: #4f5450;

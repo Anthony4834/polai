@@ -3,6 +3,7 @@ import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import {
   applyNeutralRewrite,
   createHighlights,
+  isBiasCategory,
   mergeHighlights,
   type AnalysisResponse,
   type Highlight,
@@ -14,6 +15,14 @@ const isAnalysisResponse = (value: unknown): value is AnalysisResponse => {
   const response = value as Partial<AnalysisResponse>
   return typeof response.summary === 'string'
     && Array.isArray(response.biases)
+    && response.biases.every(finding => Boolean(finding)
+      && typeof finding === 'object'
+      && Array.isArray(finding.categories)
+      && finding.categories.length > 0
+      && finding.categories.every(isBiasCategory)
+      && typeof finding.line === 'string'
+      && typeof finding.reason === 'string'
+      && typeof finding.fixed === 'string')
     && typeof response.neutralText === 'string'
 }
 

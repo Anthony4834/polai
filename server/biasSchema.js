@@ -17,6 +17,21 @@ export const biasResponseFormat = {
                 items: {
                     type: 'object',
                     properties: {
+                        categories: {
+                            type: 'array',
+                            description: 'Every demonstrated bias category for this exact passage.',
+                            items: {
+                                type: 'string',
+                                enum: [
+                                    'loaded_language',
+                                    'intent_attribution',
+                                    'unbalanced_framing',
+                                    'unsupported_speculation',
+                                    'partisan_asymmetry'
+                                ]
+                            },
+                            minItems: 1
+                        },
                         reason: {
                             type: 'string'
                         },
@@ -29,7 +44,7 @@ export const biasResponseFormat = {
                             description: 'A local neutral replacement for line only, without surrounding source text.'
                         }
                     },
-                    required: ['reason', 'line', 'fixed'],
+                    required: ['categories', 'reason', 'line', 'fixed'],
                     additionalProperties: false
                 }
             }

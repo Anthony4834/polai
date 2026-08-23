@@ -1,6 +1,10 @@
 import { forwardRef, type CSSProperties } from 'react'
 
-import { calculateBiasPercent, type Highlight } from '../highlights'
+import {
+  BIAS_CATEGORY_LABELS,
+  calculateBiasPercent,
+  type Highlight,
+} from '../highlights'
 
 interface AnalysisProps {
   text: string
@@ -93,6 +97,11 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
                         </span>
                         <span>“{highlight.line}”</span>
                       </button>
+                      <ul className="finding-categories" aria-label="Bias categories">
+                        {highlight.categories.map(category => (
+                          <li key={category}>{BIAS_CATEGORY_LABELS[category]}</li>
+                        ))}
+                      </ul>
                       <p className="finding-reason">{highlight.reason}</p>
                       <div className="neutral-wording">
                         <span>Neutral wording</span>
