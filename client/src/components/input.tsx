@@ -8,8 +8,17 @@ import {
     type Highlight
 } from '../highlights';
 import { MQ } from '../util';
-import { Panel } from './panel';
+import {
+    Panel,
+    PanelEyebrow,
+    PanelHeader,
+    PanelHeading,
+    PanelMeta,
+    PanelTitle
+} from './panel';
 import { Spinner } from './spinner/spinner';
+
+const MAX_CONTENT_LENGTH = 50_000;
 
 const isAnalysisResponse = (value: unknown): value is AnalysisResponse => {
     if (!value || typeof value !== 'object') return false;
@@ -50,35 +59,29 @@ const analyzeText = async (content: string) => {
     };
 };
 
-// Function to generate the highlighted segments based on the `highlights` state
 const getHighlightedText = (text: string, highlights: Highlight[]) => {
     const mergedHighlights = mergeHighlights(highlights);
-
     const parts: ReactNode[] = [];
     let lastIndex = 0;
 
     mergedHighlights.forEach(({ start, end, color }) => {
-        // Ensure indices are within bounds
         start = Math.max(0, start);
         end = Math.min(text.length, end);
 
         if (start > lastIndex) {
-            // Add unhighlighted text
             parts.push(<span key={`text-${lastIndex}-${start}`}>{text.slice(lastIndex, start)}</span>);
         }
 
         if (end > start) {
-            // Add highlighted text
             parts.push(
-                <span key={`highlight-${start}-${end}`} style={{ backgroundColor: color }}>
+                <mark key={`highlight-${start}-${end}`} style={{ backgroundColor: color }}>
                     {text.slice(start, end)}
-                </span>
+                </mark>
             );
             lastIndex = end;
         }
     });
 
-    // Add any remaining unhighlighted text
     if (lastIndex < text.length) {
         parts.push(<span key={`text-${lastIndex}-${text.length}`}>{text.slice(lastIndex)}</span>);
     }
@@ -110,7 +113,7 @@ export const Input: FC<InputProps> = ({
     const [lastAnalyzed, setLastAnalyzed] = useState('');
     const [error, setError] = useState('');
 
-    const reset = () => {
+    const resetAnalysis = () => {
         setHighlights([]);
         setSummary('');
         setLastAnalyzed('');
@@ -136,147 +139,273 @@ export const Input: FC<InputProps> = ({
         }
     };
 
+    const handleFixBiases = () => {
+        const { fixedText } = replaceBiases(text, highlights);
+        setText(fixedText);
+        setLastAnalyzed('');
+        setHighlights([]);
+        setSummary('Suggested neutral wording was applied.');
+    };
+
+    const isCurrentAnalysis = Boolean(text) && lastAnalyzed === text;
+    const editorStatus = highlights.length > 0
+        ? `${highlights.length} ${highlights.length === 1 ? 'passage' : 'passages'} flagged`
+        : isCurrentAnalysis
+            ? 'Analysis complete'
+            : `${text.length.toLocaleString()} / ${MAX_CONTENT_LENGTH.toLocaleString()}`;
+
     return (
-        <Panel>
-            <Overlay ref={overlayRef}>{getHighlightedText(text, highlights)}</Overlay>
-            <TextArea
-                ref={textareaRef}
-                value={text}
-                onChange={e => {
-                    reset();
-                    setText(e.target.value);
-                }}
-                onScroll={() => {
-                    if (overlayRef.current && textareaRef.current) {
-                        overlayRef.current.scrollTop = textareaRef.current.scrollTop;
-                    }
-                }}
-                placeholder='Enter text here...'
-            />
-            {error ? <ErrorMessage role='alert'>{error}</ErrorMessage> : null}
-            <ButtonsSection>
-                <Button
-                    onClick={handleAnalyze}
-                    disabled={isProcessing || !text || lastAnalyzed === text}>
-                    {isProcessing ? <Spinner /> : 'Analyze'}
-                </Button>
-                <Button
-                    onClick={() => {
-                        const { fixedText } = replaceBiases(text, highlights);
-                        setText(fixedText);
-                        setLastAnalyzed('');
-                        setHighlights([]);
-                        setSummary('Suggested neutral wording was applied.');
-                    }}
-                    disabled={highlights.length === 0}>
-                    Fix Biases
-                </Button>
-            </ButtonsSection>
-        </Panel>
+        <EditorPanel aria-label='Text editor'>
+            <PanelHeader>
+                <PanelHeading>
+                    <PanelEyebrow>01 / Source</PanelEyebrow>
+                    <PanelTitle>Writing Canvas</PanelTitle>
+                </PanelHeading>
+                <PanelMeta>{editorStatus}</PanelMeta>
+            </PanelHeader>
+
+            <EditorBody>
+                <EditorLabel htmlFor='polai-source-text'>Text to analyze</EditorLabel>
+                <EditorCanvas>
+                    <Overlay ref={overlayRef} aria-hidden='true'>
+                        {getHighlightedText(text, highlights)}
+                    </Overlay>
+                    <TextArea
+                        id='polai-source-text'
+                        name='source-text'
+                        ref={textareaRef}
+                        value={text}
+                        maxLength={MAX_CONTENT_LENGTH}
+                        autoComplete='off'
+                        aria-describedby='editor-help'
+                        aria-busy={isProcessing}
+                        onChange={event => {
+                            resetAnalysis();
+                            setText(event.target.value);
+                        }}
+                        onScroll={() => {
+                            if (overlayRef.current && textareaRef.current) {
+                                overlayRef.current.scrollTop = textareaRef.current.scrollTop;
+                            }
+                        }}
+                        placeholder='Paste a speech, article, post, or other passage…'
+                        spellCheck={true}
+                    />
+                </EditorCanvas>
+
+                <EditorFooter>
+                    <HelperText id='editor-help'>
+                        Flagged language appears directly in the text after analysis.
+                    </HelperText>
+                    {error ? <ErrorMessage role='alert'>{error}</ErrorMessage> : null}
+                    <EditorActions>
+                        <ActionButton
+                            type='button'
+                            variant='primary'
+                            onClick={handleAnalyze}
+                            disabled={isProcessing || !text.trim() || isCurrentAnalysis}>
+                            {isProcessing ? (
+                                <ButtonContent><Spinner />Analyzing…</ButtonContent>
+                            ) : (
+                                <ButtonContent>
+                                    Analyze Text
+                                    <Arrow aria-hidden='true'>↗</Arrow>
+                                </ButtonContent>
+                            )}
+                        </ActionButton>
+                        <ActionButton
+                            type='button'
+                            variant='secondary'
+                            onClick={handleFixBiases}
+                            disabled={isProcessing || highlights.length === 0}>
+                            Apply Neutral Wording
+                        </ActionButton>
+                    </EditorActions>
+                </EditorFooter>
+            </EditorBody>
+        </EditorPanel>
     );
 };
 
-const TextArea = styled.textarea({
+const EditorPanel = styled(Panel)({
+    backgroundColor: '#fffefb'
+});
+
+const EditorBody = styled.div({
+    minHeight: 0,
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column'
+});
+
+const EditorLabel = styled.label({
     position: 'absolute',
-    width: '90%',
-    height: '80%',
-    border: '1px solid transparent',
-    borderBottom: '1px solid #ddd',
-    padding: '10px',
-    fontSize: '1.2rem',
-    lineHeight: '2rem',
-    backgroundColor: 'transparent',
-    color: 'transparent',
-    caretColor: 'black',
-    zIndex: 2,
-    overflowY: 'auto',
-    resize: 'none',
-    outline: 'none',
-    fontFamily: 'Arial, sans-serif',
+    width: '1px',
+    height: '1px',
+    padding: 0,
+    margin: '-1px',
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    border: 0
+});
+
+const editorTextStyles = {
+    padding: 'clamp(1.5rem, 3vw, 2.25rem)',
+    fontFamily: 'Inter, Avenir Next, Segoe UI, sans-serif',
+    fontSize: 'clamp(1rem, 1.4vw, 1.12rem)',
+    lineHeight: 1.85,
+    letterSpacing: '-0.006em',
+    whiteSpace: 'pre-wrap' as const,
+    overflowWrap: 'break-word' as const
+};
+
+const EditorCanvas = styled.div({
+    position: 'relative',
+    minHeight: '410px',
+    flex: 1,
+    backgroundColor: '#fffefb',
 
     [MQ.mobile]: {
-        height: '83%'
+        minHeight: '360px'
     }
 });
 
 const Overlay = styled.div({
+    ...editorTextStyles,
     position: 'absolute',
-    width: '90%',
-    height: '80%',
-    border: '1px solid transparent',
-    borderBottom: '1px solid #ddd',
-    padding: '10px',
-    fontSize: '1.2rem',
-    lineHeight: '2rem',
-    whiteSpace: 'pre-wrap',
-    wordWrap: 'break-word',
-    color: 'black',
+    inset: 0,
     zIndex: 1,
+    overflowY: 'hidden',
+    color: '#24302c',
     pointerEvents: 'none',
-    textAlign: 'left',
-    overflowY: 'hidden', // Hide scrollbar on overlay
-    fontFamily: 'Arial, sans-serif',
 
-    [MQ.mobile]: {
-        height: '83%'
+    '& mark': {
+        padding: '0.12em 0',
+        color: 'inherit',
+        borderRadius: '0.16em',
+        boxDecorationBreak: 'clone',
+        WebkitBoxDecorationBreak: 'clone'
     }
 });
 
-const ButtonsSection = styled.div({
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '1rem',
-    width: '50%',
+const TextArea = styled.textarea({
+    ...editorTextStyles,
     position: 'absolute',
-    bottom: '2rem',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 2,
+    resize: 'none',
+    overflowY: 'auto',
+    border: 0,
+    outline: 0,
+    color: 'transparent',
+    backgroundColor: 'transparent',
+    caretColor: '#173d35',
+    WebkitTextFillColor: 'transparent',
 
-    [MQ.mobile]: {
-        width: '100%',
-        bottom: '1rem'
+    '&::placeholder': {
+        color: '#9a9f9c',
+        WebkitTextFillColor: '#9a9f9c'
+    },
+
+    '&:focus-visible': {
+        boxShadow: 'inset 0 0 0 3px rgba(39, 107, 90, 0.18)'
+    },
+
+    '&::selection': {
+        color: 'transparent',
+        backgroundColor: 'rgba(39, 107, 90, 0.2)'
     }
+});
+
+const EditorFooter = styled.footer({
+    padding: '1.15rem clamp(1.25rem, 3vw, 2rem) 1.5rem',
+    borderTop: '1px solid #ebe9e2',
+    backgroundColor: '#faf9f5'
+});
+
+const HelperText = styled.p({
+    margin: 0,
+    color: '#7a817e',
+    fontSize: '0.74rem',
+    lineHeight: 1.5
 });
 
 const ErrorMessage = styled.p({
-    position: 'absolute',
-    bottom: '6.5rem',
-    margin: 0,
-    color: '#b42318',
-    fontSize: '0.95rem',
-    textAlign: 'center'
+    margin: '0.7rem 0 0',
+    padding: '0.7rem 0.8rem',
+    color: '#8a3034',
+    border: '1px solid #edccce',
+    borderRadius: '0.55rem',
+    backgroundColor: '#fff4f4',
+    fontSize: '0.8rem'
 });
 
-const Button = styled.button({
-    padding: '0rem',
-    height: '4rem',
-    width: '10rem',
-    transition: 'all 0.3s',
-    overflow: 'hidden',
-    left: 'calc(50% - 5rem)',
-    borderRadius: '5px',
-    backgroundImage: 'linear-gradient(135deg, #ff6b6b, #ff7979, #ff4d4d)',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
-    outline: 'none',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    filter: 'brightness(1)',
+const EditorActions = styled.div({
+    marginTop: '1rem',
+    display: 'flex',
+    gap: '0.65rem',
 
-    '&:hover': {
-        filter: 'brightness(1.1)'
+    [MQ.mobile]: {
+        flexDirection: 'column'
+    }
+});
+
+const ActionButton = styled.button<{ variant: 'primary' | 'secondary' }>(({ variant }) => ({
+    minHeight: '2.85rem',
+    padding: '0.75rem 1rem',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: variant === 'primary' ? '1px solid #173d35' : '1px solid #cbcfc9',
+    borderRadius: '0.65rem',
+    color: variant === 'primary' ? '#fffefb' : '#27332f',
+    backgroundColor: variant === 'primary' ? '#173d35' : '#fffefb',
+    boxShadow: variant === 'primary' ? '0 8px 20px rgba(23, 61, 53, 0.16)' : 'none',
+    cursor: 'pointer',
+    touchAction: 'manipulation',
+    fontSize: '0.82rem',
+    fontWeight: 720,
+    transition: 'transform 160ms ease, background-color 160ms ease, border-color 160ms ease',
+
+    '&:hover:not(:disabled)': {
+        backgroundColor: variant === 'primary' ? '#215448' : '#f3f1eb',
+        transform: 'translateY(-1px)'
     },
 
-    '&:active': {
-        filter: 'brightness(0.9)'
+    '&:active:not(:disabled)': {
+        transform: 'translateY(0)'
+    },
+
+    '&:focus-visible': {
+        outline: '3px solid rgba(39, 107, 90, 0.24)',
+        outlineOffset: '2px'
     },
 
     '&:disabled': {
-        filter: 'brightness(0.8)',
+        color: '#9a9f9c',
+        borderColor: '#e0dfda',
+        backgroundColor: '#eeede8',
+        boxShadow: 'none',
         cursor: 'not-allowed'
     },
 
     [MQ.mobile]: {
-        height: '3rem',
-        width: '8rem'
+        width: '100%',
+        minHeight: '3rem'
     }
+}));
+
+const ButtonContent = styled.span({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.55rem'
+});
+
+const Arrow = styled.span({
+    fontSize: '1rem',
+    fontWeight: 500,
+    lineHeight: 1
 });
