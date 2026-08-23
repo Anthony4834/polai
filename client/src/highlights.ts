@@ -33,13 +33,13 @@ export interface AnalysisResponse {
 }
 
 const HIGHLIGHT_COLORS = [
-    '#E4E8EA',
-    '#ECE7E2'
+    'var(--evidence-cool)',
+    'var(--evidence-warm)'
 ] as const;
 
 export const HIGHLIGHT_EDGES = [
-    '#6F7B82',
-    '#81746A'
+    'var(--evidence-cool-edge)',
+    'var(--evidence-warm-edge)'
 ] as const;
 
 const sortValidHighlights = (highlights: Highlight[]) => {

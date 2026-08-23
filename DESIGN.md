@@ -19,6 +19,25 @@ colors:
   rule: "#E2E2E0"
   rule-strong: "#CCCECA"
   error: "#A33B31"
+colors-dark:
+  paper: "#171916"
+  paper-muted: "#1D201C"
+  ink: "#F1F0EB"
+  ink-muted: "#B5BAB2"
+  ink-faint: "#969C94"
+  mineral: "#9FC5AD"
+  mineral-strong: "#B6D7C1"
+  mineral-fill: "#315443"
+  action-tint: "#26372D"
+  action-tint-edge: "#668774"
+  focus-surface: "#202720"
+  evidence-cool: "#30383C"
+  evidence-cool-edge: "#839199"
+  evidence-warm: "#3A3430"
+  evidence-warm-edge: "#A09185"
+  rule: "#343834"
+  rule-strong: "#4A504A"
+  error: "#F0A79E"
 typography:
   display:
     fontFamily: 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -116,7 +135,7 @@ The interface stays neutral and nonpartisan. Mineral green carries actions and f
 
 ## Colors
 
-The palette feels like warm paper and inspection ink: restrained neutrals, one mineral action color, and two pale evidence tones.
+The palette feels like warm paper and inspection ink: restrained neutrals, one mineral action color, and two evidence tones. Dark mode keeps the same material world with warm charcoal surfaces, off-white ink, a lighter mineral action color, and deeper graphite and stone evidence fills. System preference is the default; an explicit user choice persists.
 
 ### Primary
 
@@ -173,11 +192,11 @@ The palette feels like warm paper and inspection ink: restrained neutrals, one m
 
 ## Layout
 
-Desktop uses a fixed-height, continuous workspace beneath a 64px masthead. The main grid is approximately 58/42 (`1.38fr 1fr`): the editor is dominant, while the analysis rail stays narrow but never below 360px. A single vertical hairline creates the seam; neither side becomes a card.
+Desktop uses a fixed-height, continuous workspace beneath a 64px masthead. The main grid is approximately 58/42 (`1.38fr 1fr`): the editor is dominant, while the analysis rail stays narrow but never below 360px. A single vertical hairline creates the seam; neither side becomes a card. Redundant region-title and word-count strips are omitted; the editor and analysis content begin directly below the masthead.
 
-The editor uses fluid insets, from 28px up to 64px vertically and from 24px up to 48px horizontally. Pane headers are 58px high. The source footer is 78px high and keeps compact actions right.
+The editor uses fluid insets, from 28px up to 64px vertically and from 24px up to 48px horizontally. The source footer is 78px high and keeps compact actions right.
 
-At 900px and below, the workspace becomes sequential: source first, analysis second. The masthead becomes a sticky 56px bar, the editor keeps at least 420px of working height, and the analysis region scrolls with the page. At 620px, pane insets tighten to 22px, editor type reduces slightly, and footer actions take equal width; at 410px, actions stack.
+At 900px and below, the workspace becomes sequential: source first, analysis second. The masthead becomes sticky, the editor keeps at least 420px of working height, and the analysis region scrolls with the page. At 620px, the masthead grows to 84px so its description can wrap without crowding the theme selector; pane insets tighten to 22px, editor type reduces slightly, and footer actions take equal width. At 410px, actions stack.
 
 **The Continuous Workspace Rule.** Desktop editor and analysis regions share one viewport-height field, one seam, and aligned headers.
 
@@ -200,8 +219,9 @@ The form language is rectilinear and exact. Text marks and phrase bands use gent
 ### Masthead
 
 - **Character:** Quiet identification, not navigation chrome.
-- **Structure:** A 64px matte bar with the wordmark left and one lower hairline.
-- **Responsive:** It becomes sticky and 56px high on sequential layouts.
+- **Structure:** A compact matte bar with the wordmark, a direct one-sentence product description, a native theme selector, and one lower hairline.
+- **Theme:** System, Light, and Dark are available. System is the default, and an explicit choice persists without a flash of the wrong theme.
+- **Responsive:** It becomes sticky on sequential layouts; compact screens move the description below the wordmark and selector.
 
 ### Source Editor
 

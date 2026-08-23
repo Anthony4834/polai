@@ -18,8 +18,8 @@ describe('createHighlights', () => {
             { start: 5, end: 9 }
         ]);
         expect(highlights.map(({ color }) => color)).toEqual([
-            '#E4E8EA',
-            '#ECE7E2'
+            'var(--evidence-cool)',
+            'var(--evidence-warm)'
         ]);
     });
 

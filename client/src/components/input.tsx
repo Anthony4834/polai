@@ -217,18 +217,10 @@ export function Input({
     }
   }
 
-  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
   const analysisIsCurrent = lastAnalyzed === text
 
   return (
-    <section className="source-pane" aria-labelledby="source-title">
-      <header className="pane-header source-header">
-        <h2 id="source-title">Source text</h2>
-        <span className="word-count" aria-live="polite">
-          {wordCount} {wordCount === 1 ? 'word' : 'words'}
-        </span>
-      </header>
-
+    <section className="source-pane" aria-label="Source text">
       <div className="editor-shell">
         <div ref={overlayRef} className="editor-overlay" aria-hidden="true">
           {getHighlightedText(text, highlights, activeHighlight)}

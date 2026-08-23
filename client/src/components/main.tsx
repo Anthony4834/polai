@@ -1,8 +1,21 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import type { Highlight } from '../highlights'
 import { Analysis } from './analysis'
 import { Input } from './input'
+
+type ThemePreference = 'system' | 'light' | 'dark'
+
+const THEME_STORAGE_KEY = 'polai-theme'
+
+const getInitialTheme = (): ThemePreference => {
+  try {
+    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
+    return storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : 'system'
+  } catch {
+    return 'system'
+  }
+}
 
 export function Main() {
   const [text, setText] = useState('')
@@ -11,7 +24,22 @@ export function Main() {
   const [highlights, setHighlights] = useState<Highlight[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [activeHighlight, setActiveHighlight] = useState<number | null>(null)
+  const [themePreference, setThemePreference] = useState<ThemePreference>(getInitialTheme)
   const analysisRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (themePreference === 'system') {
+      delete document.documentElement.dataset.theme
+    } else {
+      document.documentElement.dataset.theme = themePreference
+    }
+
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, themePreference)
+    } catch {
+      // Theme selection still works when browser storage is unavailable.
+    }
+  }, [themePreference])
 
   const showAnalysis = () => {
     if (!window.matchMedia('(max-width: 900px)').matches) return
@@ -38,9 +66,23 @@ export function Main() {
   return (
     <div className="app-shell">
       <header className="masthead">
-        <a className="wordmark" href="/" aria-label="PolAI home">
-          PolAI
-        </a>
+        <div className="masthead-copy">
+          <a className="wordmark" href="/" aria-label="PolAI home">
+            PolAI
+          </a>
+          <p>Find politically biased passages and revise them in neutral language.</p>
+        </div>
+        <label className="theme-picker">
+          <span>Theme</span>
+          <select
+            value={themePreference}
+            onChange={event => setThemePreference(event.target.value as ThemePreference)}
+          >
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
       </header>
 
       <main className="workspace">

@@ -31,11 +31,7 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
   const percentage = calculateBiasPercent(text, highlights)
 
   return (
-    <aside ref={ref} className="analysis-pane" aria-labelledby="analysis-title">
-      <header className="pane-header analysis-header">
-        <h2 id="analysis-title">Analysis</h2>
-      </header>
-
+    <aside ref={ref} className="analysis-pane" aria-label="Analysis">
       {isProcessing ? (
         <div className="analysis-loading" aria-live="polite" aria-busy="true">
           <p>Analyzing source text…</p>

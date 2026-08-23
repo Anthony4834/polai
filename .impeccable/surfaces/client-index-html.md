@@ -22,7 +22,7 @@ related_targets: ["client/src/components/main.tsx","client/src/components/input.
 
 - Direction: Condition Report, grounded direction 4 from seed `3d60cd0a`.
 - Approved comp: `.impeccable/mocks/decision/assigned.png`.
-- Composition: a 56-64px masthead over one continuous desktop workspace;
+- Composition: a compact descriptive masthead over one continuous desktop workspace;
   the source editor owns roughly 58% and the analysis rail 42%, divided by a
   single hairline. On compact screens the same regions stack in task order.
 - Memorable moment: hovering a finding row activates its exact source span;
@@ -35,15 +35,15 @@ related_targets: ["client/src/components/main.tsx","client/src/components/input.
 
 | Ingredient | Recorded treatment | Medium |
 | --- | --- | --- |
-| Page ground | sampled near-white `#FDFCFA` | semantic HTML + CSS |
-| Masthead | matte ground, 1px `#E2E2E0` lower rule, no navigation | `header` + CSS |
+| Page ground | warm paper `#FDFCFA` or charcoal `#171916`, selected from system preference by default | semantic HTML + CSS |
+| Masthead | matte ground, one lower rule, wordmark, product description, and native System/Light/Dark selector | `header` + CSS |
 | Wordmark | heavy workhorse sans, about 28px desktop | semantic text |
 | Workspace seam | one 1px cool-gray vertical rule | CSS grid border |
 | Source field | dominant, flat, no card shell; 18-20px prose at 1.75 line height | textarea + synchronized semantic overlay |
-| Highlight, primary | cool graphite `#E4E8EA`, `#6F7B82` edge, indexed active state | inline overlay spans + CSS |
-| Highlight, secondary | warm stone `#ECE7E2`, `#81746A` edge | inline overlay spans + CSS |
-| Ink | near-black `#171A18`; muted metadata | semantic text + CSS |
-| Accent | sampled mineral green `#315443` | CSS token |
+| Highlight, primary | cool graphite `#E4E8EA`/`#30383C`, with `#6F7B82`/`#839199` edge, indexed active state | inline overlay spans + CSS |
+| Highlight, secondary | warm stone `#ECE7E2`/`#3A3430`, with `#81746A`/`#A09185` edge | inline overlay spans + CSS |
+| Ink | near-black `#171A18` or off-white `#F1F0EB`; muted metadata | semantic text + CSS |
+| Accent | mineral green `#315443` in light and `#9FC5AD` in dark | CSS token |
 | Editor focus | quiet mineral-tinted paper shift plus a short internal mineral rule above the writing line; no perimeter outline | CSS |
 | Editor action | compact outlined rectangle at the editor's lower right | native button + CSS |
 | Analysis summary | percentage, one sentence, hairline separation; no gauge | semantic headings and paragraphs |
@@ -66,6 +66,8 @@ related_targets: ["client/src/components/main.tsx","client/src/components/input.
 ## Constraints and unresolved decisions
 
 - Do not introduce imagery, navigation, saving, history, or new product claims.
+- System theme is the default. Persist explicit Light or Dark choices and apply
+  them before first paint.
 - Do not communicate findings by color alone; pair tone with the exact quoted
   phrase and explicit labels.
 - Raw-submission persistence remains outside this redesign.
