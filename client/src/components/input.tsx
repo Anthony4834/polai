@@ -3,6 +3,7 @@ import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import {
   applyNeutralRewrite,
   createHighlights,
+  HIGHLIGHT_EDGES,
   isBiasCategory,
   mergeHighlights,
   type AnalysisResponse,
@@ -79,10 +80,9 @@ const getHighlightedText = (
       const sourceIndex = highlights.findIndex(
         highlight => highlight.start < end && highlight.end > start,
       )
-      const tone = sourceIndex % 2 === 0 ? 'mint' : 'amber'
       const style = {
         '--highlight-color': color,
-        '--highlight-edge': tone === 'mint' ? '#8EAA96' : '#E7BF79',
+        '--highlight-edge': HIGHLIGHT_EDGES[sourceIndex % HIGHLIGHT_EDGES.length],
       } as CSSProperties
 
       parts.push(
@@ -214,9 +214,8 @@ export function Input({
             overlayRef.current.scrollTop = textareaRef.current.scrollTop
             overlayRef.current.scrollLeft = textareaRef.current.scrollLeft
           }}
-          placeholder="Write or paste text to review…"
+          placeholder="Paste an article, post, speech, or draft to review for political bias."
           aria-label="Text to review"
-          aria-describedby="editor-help"
           spellCheck
         />
       </div>
@@ -228,11 +227,6 @@ export function Input({
       ) : null}
 
       <footer className="source-footer">
-        <p id="editor-help" className="editor-help">
-          {highlights.length > 0
-            ? `${highlights.length} ${highlights.length === 1 ? 'passage' : 'passages'} marked in the source.`
-            : 'Your text stays editable after review.'}
-        </p>
         <div className="editor-actions">
           {highlights.length > 0 && neutralText ? (
             <button

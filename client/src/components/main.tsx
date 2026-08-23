@@ -28,7 +28,6 @@ export function Main() {
         <a className="wordmark" href="/" aria-label="PolAI home">
           PolAI
         </a>
-        <span className="masthead-context">Political bias review</span>
       </header>
 
       <main className="workspace">

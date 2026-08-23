@@ -3,6 +3,7 @@ import { forwardRef, type CSSProperties } from 'react'
 import {
   BIAS_CATEGORY_LABELS,
   calculateBiasPercent,
+  HIGHLIGHT_EDGES,
   type Highlight,
 } from '../highlights'
 
@@ -27,19 +28,17 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
   ref,
 ) {
   const hasAnalysis = Boolean(summary) || highlights.length > 0
-  const status = isProcessing ? 'Reviewing' : hasAnalysis ? 'Complete' : 'Ready'
   const percentage = calculateBiasPercent(text, highlights)
 
   return (
     <aside ref={ref} className="analysis-pane" aria-labelledby="analysis-title">
       <header className="pane-header analysis-header">
         <h2 id="analysis-title">Analysis</h2>
-        <span className={`status-chip status-${status.toLowerCase()}`}>{status}</span>
       </header>
 
       {isProcessing ? (
         <div className="analysis-loading" aria-live="polite" aria-busy="true">
-          <p>Reviewing language and context…</p>
+          <p>Analyzing source text…</p>
           <span />
           <span />
           <span />
@@ -47,15 +46,15 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
       ) : !hasAnalysis ? (
         <div className="analysis-empty">
           <span className="empty-rule" aria-hidden="true" />
-          <h3>Ready when you are.</h3>
-          <p>Run an analysis to connect each finding to its exact phrase in the source.</p>
+          <h3>No analysis yet</h3>
+          <p>Findings will appear here after analysis.</p>
         </div>
       ) : (
         <div className="analysis-content" aria-live="polite">
           <section className="analysis-summary" aria-labelledby="summary-title">
             <p className="summary-measure">
               <strong>{percentage}%</strong>
-              <span>of source text flagged — coverage, not severity</span>
+              <span>of source text appears politically biased</span>
             </p>
             <h3 id="summary-title">Summary</h3>
             <p>{summary}</p>
@@ -72,10 +71,9 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
               </div>
               <ol className="finding-list">
                 {highlights.map((highlight, index) => {
-                  const tone = index % 2 === 0 ? 'mint' : 'amber'
                   const style = {
                     '--finding-fill': highlight.color,
-                    '--finding-edge': tone === 'mint' ? '#8EAA96' : '#E7BF79',
+                    '--finding-edge': HIGHLIGHT_EDGES[index % HIGHLIGHT_EDGES.length],
                   } as CSSProperties
 
                   return (

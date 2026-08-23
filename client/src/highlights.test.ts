@@ -17,6 +17,10 @@ describe('createHighlights', () => {
             { start: 0, end: 4 },
             { start: 5, end: 9 }
         ]);
+        expect(highlights.map(({ color }) => color)).toEqual([
+            '#E4E8EA',
+            '#ECE7E2'
+        ]);
     });
 
     it('skips a line that is not present in the source', () => {

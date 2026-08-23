@@ -39,10 +39,11 @@ related_targets: ["client/src/components/main.tsx","client/src/components/input.
 | Wordmark | heavy workhorse sans, about 28px desktop | semantic text |
 | Workspace seam | one 1px cool-gray vertical rule | CSS grid border |
 | Source field | dominant, flat, no card shell; 18-20px prose at 1.75 line height | textarea + synchronized semantic overlay |
-| Highlight, primary | sampled mint `#E4EEE5`, darker green edge, indexed active state | inline overlay spans + CSS |
-| Highlight, secondary | sampled amber `#FDF2DF`, `#E7BF79` edge | inline overlay spans + CSS |
+| Highlight, primary | cool graphite `#E4E8EA`, `#6F7B82` edge, indexed active state | inline overlay spans + CSS |
+| Highlight, secondary | warm stone `#ECE7E2`, `#81746A` edge | inline overlay spans + CSS |
 | Ink | near-black `#171A18`; muted metadata | semantic text + CSS |
 | Accent | sampled mineral green `#315443` | CSS token |
+| Editor focus | quiet mineral-tinted paper shift plus a short internal mineral rule above the writing line; no perimeter outline | CSS |
 | Editor action | compact outlined rectangle at the editor's lower right | native button + CSS |
 | Analysis summary | percentage, one sentence, hairline separation; no gauge | semantic headings and paragraphs |
 | Findings | numbered rows separated by rules; phrase, reason, neutral wording | ordered list/articles + buttons |
@@ -52,12 +53,14 @@ related_targets: ["client/src/components/main.tsx","client/src/components/input.
 
 ## Component grammar
 
-- Corners: 0-4px; no pill containers except a compact status label.
-- Lines: 1px cool-gray separators; 1px green/amber finding outlines.
+- Corners: 0-4px; pills are reserved for short bias-category labels.
+- Lines: 1px cool-gray separators; 1px graphite/stone finding outlines.
 - Elevation: none.
 - Type ramp: 28px wordmark, 18px region titles, 16px UI/body, 14px
   metadata, 44-52px percentage.
 - Density: generous reading room in the source; compact, scannable analysis.
+- Selection: source and analysis content remain copyable; chrome, headings,
+  counts, category tags, and button labels do not select.
 
 ## Constraints and unresolved decisions
 
