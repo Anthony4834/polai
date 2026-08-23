@@ -26,9 +26,13 @@ export function Main() {
     setActiveHighlight(index)
     if (index === null) return
 
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'auto'
+      : 'smooth'
+
     analysisRef.current
       ?.querySelector<HTMLElement>(`[data-finding-index="${index}"]`)
-      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+      ?.scrollIntoView({ behavior, block: 'nearest', inline: 'nearest' })
   }
 
   return (
@@ -63,6 +67,7 @@ export function Main() {
           highlights={highlights}
           isProcessing={isProcessing}
           activeHighlight={activeHighlight}
+          onHighlightFocus={setActiveHighlight}
         />
       </main>
     </div>

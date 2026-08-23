@@ -228,7 +228,7 @@ The form language is rectilinear and exact. Text marks and phrase bands use gent
 
 - **Character:** Inspection notes linked directly to exact source spans.
 - **Structure:** Each row contains the highlighted phrase, a reason, and a separately labeled neutral replacement. Supporting content aligns directly with the phrase instead of sitting in a decorative index column.
-- **State:** Hovering a marked source phrase reveals and activates its matching row. The quoted finding itself has no hover treatment because it is selectable content, not a control.
+- **State:** Hovering a finding row activates its matching source phrase. Hovering a marked source phrase smoothly reveals and activates its matching row, with an instant reduced-motion fallback. The quoted phrase band has no separate hover treatment because it is selectable content, not a control.
 - **Separation:** Rows use hairlines and spacing rather than individual cards.
 
 ### Empty, Loading, and Error States

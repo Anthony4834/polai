@@ -25,8 +25,9 @@ related_targets: ["client/src/components/main.tsx","client/src/components/input.
 - Composition: a 56-64px masthead over one continuous desktop workspace;
   the source editor owns roughly 58% and the analysis rail 42%, divided by a
   single hairline. On compact screens the same regions stack in task order.
-- Memorable moment: hovering an exact source highlight reveals and activates
-  its matching finding with the same tone and border.
+- Memorable moment: hovering a finding row activates its exact source span;
+  hovering that source span smoothly reveals and activates the matching row
+  with the same tone and border, with an instant reduced-motion fallback.
 - Do not literalize: the comp's synthetic policy copy, generated percentage,
   or generated reasons. Runtime content remains authoritative.
 

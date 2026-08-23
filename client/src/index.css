@@ -263,7 +263,9 @@ button,
 }
 
 .source-editor::selection {
+  color: transparent;
   background: rgba(49, 84, 67, 0.18);
+  -webkit-text-fill-color: transparent;
 }
 
 .text-mark {

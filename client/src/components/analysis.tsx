@@ -13,6 +13,7 @@ interface AnalysisProps {
   highlights: Highlight[]
   isProcessing: boolean
   activeHighlight: number | null
+  onHighlightFocus: (index: number | null) => void
 }
 
 export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis(
@@ -22,6 +23,7 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
     highlights,
     isProcessing,
     activeHighlight,
+    onHighlightFocus,
   },
   ref,
 ) {
@@ -80,6 +82,8 @@ export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis
                       key={`${highlight.start}-${highlight.end}-${highlight.line}`}
                       style={style}
                       data-finding-index={index}
+                      onMouseEnter={() => onHighlightFocus(index)}
+                      onMouseLeave={() => onHighlightFocus(null)}
                     >
                       <p className="finding-phrase">“{highlight.line}”</p>
                       <ul className="finding-categories" aria-label="Bias categories">
