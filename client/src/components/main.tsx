@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import React, { useRef, useState } from 'react';
+import type { Highlight } from '../highlights';
 import { MQ } from '../util';
 import { Analysis } from './analysis';
 import { Input } from './input';
@@ -23,8 +24,6 @@ const Container = styled.div({
         paddingBottom: '1vh'
     }
 });
-
-export type Highlight = { start: number; end: number; color: string; reason: string; fixed: string };
 
 export const Main: React.FC = () => {
     const [text, setText] = useState('');

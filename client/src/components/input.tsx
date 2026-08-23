@@ -1,125 +1,60 @@
 import styled from '@emotion/styled';
-import { FC, useRef, useState } from 'react';
+import { useRef, useState, type FC, type ReactNode } from 'react';
+import {
+    createHighlights,
+    mergeHighlights,
+    replaceBiases,
+    type AnalysisResponse,
+    type Highlight
+} from '../highlights';
 import { MQ } from '../util';
-import { Highlight } from './main';
+import { Panel } from './panel';
 import { Spinner } from './spinner/spinner';
 
-type ExpectedResponse = {
-    summary: string;
-    biases: { line: string; reason: string; fixed: string }[];
-    error?: string;
+const isAnalysisResponse = (value: unknown): value is AnalysisResponse => {
+    if (!value || typeof value !== 'object') return false;
+
+    const response = value as Partial<AnalysisResponse>;
+    return typeof response.summary === 'string' && Array.isArray(response.biases);
 };
-const colors = [
-    '#FF6F61', // Soft Red
-    '#FFD97D', // Soft Yellow
-    '#8BC34A', // Soft Green
-    '#FFA726', // Soft Orange
-    '#64B5F6', // Soft Blue
-    '#BA68C8', // Soft Purple
-    '#4DD0E1', // Soft Cyan
-    '#FFB74D', // Soft Light Orange
-    '#AED581', // Soft Light Green
-    '#FF8A65', // Soft Coral
-    '#90CAF9', // Soft Light Blue
-    '#81D4FA', // Soft Sky Blue
-    '#E57373', // Soft Light Red
-    '#FFF176', // Soft Lemon Yellow
-    '#DCE775', // Soft Lime
-    '#4DB6AC', // Soft Teal
-    '#9575CD', // Soft Lavender
-    '#F06292', // Soft Pink
-    '#FFCC80' // Soft Peach
-];
 
-const submitHandler = async (content: string, updateFn: (h: Highlight[], s: string) => void) => {
-    try {
-        const res: ExpectedResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/submission`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ content })
-        }).then(res => res.json());
-
-        if (!res || 'error' in res) {
-            console.error(res?.error || 'Failed to parse response');
-            return;
-        }
-
-        const { summary, biases } = res;
-
-        updateFn(
-            biases.map((item, index) => {
-                const startsAt = content.indexOf(item.line);
-                const color = index % colors.length;
-
-                return {
-                    start: startsAt,
-                    end: startsAt + item.line.length,
-                    // random color that isnt dark
-                    color: colors[color],
-                    reason: item.reason,
-                    fixed: item.fixed
-                };
-            }),
-            summary
-        );
-    } catch (error) {
-        console.error('Error:', error);
+const analyzeText = async (content: string) => {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '');
+    if (!apiBaseUrl) {
+        throw new Error('VITE_API_BASE_URL is not configured.');
     }
-};
 
-const replaceBiases = (text: string, highlights: Highlight[]) => {
-    const fixedText = highlights.reduce((acc, highlight) => {
-        return acc.replace(text.slice(highlight.start, highlight.end), highlight.fixed);
-    }, text);
-
-    const newHighlights = highlights.map(highlight => {
-        return {
-            ...highlight,
-            start: fixedText.indexOf(highlight.fixed),
-            end: fixedText.indexOf(highlight.fixed) + highlight.fixed.length
-        };
+    const response = await fetch(`${apiBaseUrl}/submission`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content })
     });
+    const payload: unknown = await response.json().catch(() => null);
 
-    return { fixedText, newHighlights };
-};
-
-// Function to merge overlapping and adjacent highlights
-const mergeHighlights = (highlights: Highlight[]) => {
-    if (!highlights.length) return [];
-
-    // Sort highlights by start index
-    const sorted = [...highlights].sort((a, b) => a.start - b.start);
-
-    const merged: Highlight[] = [];
-    let prev = sorted[0];
-
-    for (let i = 1; i < sorted.length; i++) {
-        const current = sorted[i];
-        if (current.start <= prev.end) {
-            // Overlapping or adjacent highlights, merge them
-            prev = {
-                start: prev.start,
-                end: Math.max(prev.end, current.end),
-                color: prev.color, // Assuming same color; adjust logic if colors differ,
-                reason: prev.reason + '\n' + current.reason,
-                fixed: prev.fixed + '\n' + current.fixed
-            };
-        } else {
-            merged.push(prev);
-            prev = current;
-        }
+    if (!response.ok) {
+        const message = payload && typeof payload === 'object' && 'error' in payload
+            ? String(payload.error)
+            : 'The text analysis failed.';
+        throw new Error(message);
     }
-    merged.push(prev);
-    return merged;
+
+    if (!isAnalysisResponse(payload)) {
+        throw new Error('The API returned an invalid analysis.');
+    }
+
+    return {
+        summary: payload.summary,
+        highlights: createHighlights(content, payload.biases)
+    };
 };
 
 // Function to generate the highlighted segments based on the `highlights` state
 const getHighlightedText = (text: string, highlights: Highlight[]) => {
     const mergedHighlights = mergeHighlights(highlights);
 
-    const parts: React.ReactNode[] = [];
+    const parts: ReactNode[] = [];
     let lastIndex = 0;
 
     mergedHighlights.forEach(({ start, end, color }) => {
@@ -173,13 +108,36 @@ export const Input: FC<InputProps> = ({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
     const [lastAnalyzed, setLastAnalyzed] = useState('');
+    const [error, setError] = useState('');
 
     const reset = () => {
         setHighlights([]);
         setSummary('');
+        setLastAnalyzed('');
+        setError('');
     };
+
+    const handleAnalyze = async () => {
+        setIsProcessing(true);
+        setError('');
+
+        try {
+            const result = await analyzeText(text);
+            setHighlights(result.highlights);
+            setSummary(result.summary);
+            setLastAnalyzed(text);
+        } catch (analysisError) {
+            const message = analysisError instanceof Error
+                ? analysisError.message
+                : 'The text analysis failed.';
+            setError(message);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
     return (
-        <Base>
+        <Panel>
             <Overlay ref={overlayRef}>{getHighlightedText(text, highlights)}</Overlay>
             <TextArea
                 ref={textareaRef}
@@ -195,55 +153,28 @@ export const Input: FC<InputProps> = ({
                 }}
                 placeholder='Enter text here...'
             />
+            {error ? <ErrorMessage role='alert'>{error}</ErrorMessage> : null}
             <ButtonsSection>
                 <Button
-                    onClick={() => {
-                        setIsProcessing(true);
-                        submitHandler(text, (h, s) => {
-                            setHighlights(h);
-                            setSummary(s);
-                        }).finally(() => {
-                            setIsProcessing(false);
-                        });
-                    }}
+                    onClick={handleAnalyze}
                     disabled={isProcessing || !text || lastAnalyzed === text}>
                     {isProcessing ? <Spinner /> : 'Analyze'}
                 </Button>
                 <Button
                     onClick={() => {
-                        const { fixedText, newHighlights } = replaceBiases(text, highlights);
+                        const { fixedText } = replaceBiases(text, highlights);
                         setText(fixedText);
-                        setLastAnalyzed(fixedText);
-                        setHighlights(newHighlights);
+                        setLastAnalyzed('');
+                        setHighlights([]);
+                        setSummary('Suggested neutral wording was applied.');
                     }}
                     disabled={highlights.length === 0}>
                     Fix Biases
                 </Button>
             </ButtonsSection>
-        </Base>
+        </Panel>
     );
 };
-
-export const Base = styled.div({
-    margin: 'auto 0',
-    padding: '2rem',
-    position: 'relative',
-    width: '45%',
-    height: '80vh',
-    flexDirection: 'column',
-    display: 'flex',
-    backgroundColor: 'white',
-    borderRadius: '1rem',
-    alignItems: 'center',
-    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(0, 0, 0, 0.1) 0px 8px 16px 0px',
-
-    [MQ.mobile]: {
-        height: '80vh',
-        width: '90%',
-        marginTop: '2rem',
-        padding: '2%'
-    }
-});
 
 const TextArea = styled.textarea({
     position: 'absolute',
@@ -303,6 +234,15 @@ const ButtonsSection = styled.div({
         width: '100%',
         bottom: '1rem'
     }
+});
+
+const ErrorMessage = styled.p({
+    position: 'absolute',
+    bottom: '6.5rem',
+    margin: 0,
+    color: '#b42318',
+    fontSize: '0.95rem',
+    textAlign: 'center'
 });
 
 const Button = styled.button({

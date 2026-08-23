@@ -1,24 +1,15 @@
 import styled from '@emotion/styled';
-import { FC, forwardRef } from 'react';
+import { forwardRef, type FC } from 'react';
 import clipboard from '../assets/clipboard.png';
+import { calculateBiasPercent, type Highlight } from '../highlights';
 import { MQ } from '../util';
-import { Base } from './input';
-import { Highlight } from './main';
+import { Panel } from './panel';
 
 interface AnalysisProps {
     highlights: Highlight[];
     text: string;
     summary: string;
 }
-
-const percentBiased = (props: AnalysisProps) => {
-    const { highlights, text } = props;
-    const totalLength = text.length;
-    const biasedLength = highlights.reduce((acc, highlight) => acc + highlight.end - highlight.start, 0);
-
-    const res = ((biasedLength / totalLength) * 100).toFixed(2);
-    return isNaN(Number(res)) ? '0.00' : res;
-};
 
 const percentToColor = (percent: number) => {
     if (percent < 30) return '#8BC34A';
@@ -39,7 +30,7 @@ export const Analysis = forwardRef<HTMLDivElement, AnalysisProps>((props, ref) =
 
 const Content: FC<AnalysisProps> = props => {
     const { highlights, summary } = props;
-    const percent = percentBiased(props);
+    const percent = calculateBiasPercent(props.text, highlights);
 
     if (!summary)
         return (
@@ -72,7 +63,7 @@ const Content: FC<AnalysisProps> = props => {
     );
 };
 
-const AnalysisBase = styled(Base)<{ isEmpty: boolean }>(({ isEmpty }) => ({
+const AnalysisBase = styled(Panel)<{ isEmpty: boolean }>(({ isEmpty }) => ({
     rowGap: '1rem',
     justifyContent: isEmpty ? 'center' : 'flex-start',
 
@@ -87,20 +78,6 @@ const AnalysisBase = styled(Base)<{ isEmpty: boolean }>(({ isEmpty }) => ({
         padding: '2%'
     }
 }));
-
-// export const Base = styled.div({
-//     margin: 'auto 0',
-//     padding: '2rem',
-//     position: 'relative',
-//     width: '45%',
-//     height: '80%',
-//     flexDirection: 'column',
-//     display: 'flex',
-//     backgroundColor: 'white',
-//     borderRadius: '1rem',
-//     alignItems: 'center',
-//     boxShadow: 'rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(0, 0, 0, 0.1) 0px 8px 16px 0px'
-//   });
 
 const PercentBiased = styled('h2')<{ color: string }>(({ color }) => ({
     fontSize: '2rem',

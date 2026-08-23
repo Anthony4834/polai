@@ -1,21 +1,26 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "PolAI submission and bias-analysis API.",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
-    "start": "node server.js",
-    "build": "node server.js"
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "build": "node --check server.js && node --check index.js && node --check analysis.js && node --check database.js && node --check router/submissionRoutes.js",
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "mongoose": "^8.7.0",
-    "openai": "^4.67.1"
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.22.2",
+    "mongoose": "^8.24.4",
+    "openai": "^7.5.0"
   }
 }
