@@ -78,10 +78,13 @@ Return only genuine bias findings in biases. For each finding:
 If the text has no political bias, use this exact summary:
 "This text contains no political bias."
 
-If the text has political bias, state its strength, target, direction, and the
-demonstrated category or categories. Describe loaded or adversarial framing as
-such. Do not call it partisan bias unless a partisan_asymmetry finding is
-supported by comparative evidence in the submitted text.
+If findings exist, state the framing strength, target, direction, and
+demonstrated categories. When partisan_asymmetry is absent, describe the result
+as loaded, adversarial, speculative, or intent-attributing framing. Do not call
+the passage "political bias", "bias against", "bias toward", or "partisan".
+End with: "This text alone does not establish a partisan double standard."
+Use "partisan bias" only when a partisan_asymmetry finding has comparative
+evidence in the submitted text.
 
 Use this strength rubric in the summary:
 - mild: one subtle phrase.

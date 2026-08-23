@@ -55,6 +55,8 @@ test('uses Responses with the Luna classification settings', async () => {
     assert.match(request.input[0].content, /does not need praise or a\s+list of accurate statements for balance/i);
     assert.match(request.input[0].content, /Do not use this category\s+for knowledge, motive, or intent/i);
     assert.match(request.input[0].content, /Never replace "false," "falsehood,"\s+"lie," or "misleading" with an unqualified "claim"/i);
+    assert.match(request.input[0].content, /Do not call[\s\S]*the passage "political bias", "bias against", "bias toward", or "partisan"/i);
+    assert.match(request.input[0].content, /This text alone does not establish a partisan double standard/i);
     assert.match(request.input[0].content, /moderate: one strong intent claim or two to three loaded findings/i);
     assert.equal(request.store, false);
 });
