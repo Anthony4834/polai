@@ -1,0 +1,158 @@
+{
+  "title": "Choose PolAI's visual world",
+  "question": "Keep the condition-report direction, choose the proofing-sheet alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Condition Report",
+      "kicker": "THE ROLL",
+      "lineage": "museum and archival condition reports",
+      "thesis": "The source text stays the artifact; numbered observations document only what needs attention.",
+      "palette": ["#f7f8f6", "#171a18", "#56635c", "#d9efe2", "#d7a85b"],
+      "materials": ["matte inspection paper", "hairline rules", "tabular annotations"],
+      "viewport": "A quiet masthead sits above one continuous workspace: a dominant reading field on the left and a precise findings rail on the right.",
+      "risk": "Can feel bureaucratic if the annotations become dense or the spacing loses warmth.",
+      "raised": [
+        {
+          "from": "CRT discipline",
+          "raise": "Highlight state follows one strict accent law instead of decorative color variation."
+        },
+        {
+          "from": "Step-row discipline",
+          "raise": "Findings form one numbered sequence with an unmistakable active position."
+        },
+        {
+          "from": "Fold-sequence discipline",
+          "raise": "Neutral rewrites keep a clear before-and-after relationship."
+        },
+        {
+          "from": "Tensegrity discipline",
+          "raise": "Every note and exact source span share one linked interaction state."
+        },
+        {
+          "from": "Console discipline",
+          "raise": "The empty state uses deliberate quiet instead of placeholder illustration."
+        },
+        {
+          "from": "Lineup discipline",
+          "raise": "Scale establishes source, summary, and finding hierarchy before chrome does."
+        }
+      ],
+      "comp": ".impeccable/mocks/decision/assigned.png"
+    },
+    {
+      "id": "model-pick",
+      "label": "Margin Proof",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "contemporary copy desks and blue-pencil proofing",
+      "thesis": "A modern proofing sheet keeps evidence in the margin while the writing remains uninterrupted.",
+      "palette": ["#ffffff", "#111312", "#68716c", "#dfeee8", "#315c51"],
+      "materials": ["bright paper", "blue-pencil notation", "editorial whitespace"],
+      "viewport": "A large typeset document owns the screen, with a narrow margin column for the summary, score, and linked findings.",
+      "risk": "It is the most familiar and effective option, but can resemble a generic document editor if under-authored.",
+      "comp": ".impeccable/mocks/decision/model-pick.png"
+    },
+    {
+      "id": "challenger-crt",
+      "label": "Evidence Grid",
+      "verdict": "declined",
+      "lineage": "pixel-art arcade cabinet screen",
+      "thesis": "Each flagged phrase becomes a strict cell in a luminous evidence field.",
+      "palette": ["#101312", "#e7f1e8", "#d7a85b", "#ffffff"],
+      "materials": ["hard pixel grid", "scanline rhythm"],
+      "viewport": "The text sits inside an integer grid with findings mapped to exact cells.",
+      "case": "The exact grid is legible, but the arcade language misidentifies a serious writing task.",
+      "kept": "One accent law for every active highlight.",
+      "risk": "Turns analysis into a game and conflicts with the requested elegance.",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-crt-arcade-pixel-glow-hero.webp"
+    },
+    {
+      "id": "challenger-step-row",
+      "label": "Analysis Sequence",
+      "verdict": "declined",
+      "lineage": "early-80s rhythm-machine step row",
+      "thesis": "Findings become a sequenced row that advances through the source one passage at a time.",
+      "palette": ["#222422", "#f1f2ee", "#d37c5b", "#d8b957"],
+      "materials": ["charcoal instrument panel", "silkscreen labels"],
+      "viewport": "A compact control strip sits above the editor and marks each finding as a step.",
+      "case": "The sequence clarifies progression, but the instrument metaphor adds controls the task does not need.",
+      "kept": "One numbered sequence with a clear active position.",
+      "risk": "Makes a quiet editor feel technical and busy.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-drum-machine-step-row-hero.webp"
+    },
+    {
+      "id": "challenger-origami",
+      "label": "Revision Folds",
+      "verdict": "declined",
+      "lineage": "a thirty-two-step orizuru crane sequence",
+      "thesis": "Each neutral rewrite unfolds from the original sentence in a deliberate reversible step.",
+      "palette": ["#f6f3ec", "#1a1917", "#b54536", "#c6a45d"],
+      "materials": ["washi fiber", "crease diagrams"],
+      "viewport": "The editor stays central while each finding opens into a before-and-after fold.",
+      "case": "The transformation model is truthful, but the craft metaphor competes with reading speed.",
+      "kept": "A clear before-and-after relationship for rewrites.",
+      "risk": "Feels thematic rather than like a neutral productivity tool.",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-orizuru-crane-sequence-hero.webp"
+    },
+    {
+      "id": "challenger-tensegrity",
+      "label": "Linked Evidence",
+      "verdict": "declined",
+      "lineage": "tensegrity force diagrams",
+      "thesis": "Source spans and explanations form a single linked network of evidence.",
+      "palette": ["#efefeb", "#151716", "#a84f44", "#737a76"],
+      "materials": ["pale concrete", "carbon lines", "tension cord"],
+      "viewport": "Leader lines connect marked phrases directly to a narrow force-diagram rail.",
+      "case": "The linkage is product-specific, but a spatial network weakens long-form reading clarity.",
+      "kept": "One shared active state between a note and its exact source span.",
+      "risk": "Adds visual mechanics where simple proximity is stronger.",
+      "hero": "https://impeccable.style/worlds/cards/kinetic-sculpture-automata-tensegrity-breathing-column-hero.webp"
+    },
+    {
+      "id": "challenger-console",
+      "label": "Quiet Archive",
+      "verdict": "declined",
+      "lineage": "sixth-generation console system menus",
+      "thesis": "The current document floats forward while prior and future states recede into quiet depth.",
+      "palette": ["#0b1117", "#e7eceb", "#d6a75a", "#41515a"],
+      "materials": ["black-blue void", "translucent depth"],
+      "viewport": "A single luminous document occupies a dark field with findings orbiting at the edge.",
+      "case": "The focus is strong, but atmospheric depth reduces editing precision and daylight usability.",
+      "kept": "An empty state that trusts deliberate quiet.",
+      "risk": "Dark cinematic atmosphere contradicts the simple writing-tool brief.",
+      "hero": "https://impeccable.style/worlds/cards/digital-design-canon-console-dashboard-atmosphere-hero.webp"
+    },
+    {
+      "id": "challenger-lineup",
+      "label": "Typographic Billing",
+      "verdict": "declined",
+      "lineage": "music-festival lineup posters",
+      "thesis": "Source, summary, and findings communicate priority through type scale alone.",
+      "palette": ["#ece9df", "#151515", "#376457"],
+      "materials": ["single ink", "condensed type block"],
+      "viewport": "A single typographic field gives the source most of the width and steps findings down by importance.",
+      "case": "Hierarchy is immediate, but poster billing does not support precise editing controls.",
+      "kept": "Scale carries hierarchy before containers or color.",
+      "risk": "Long prose becomes performative and less comfortable to edit.",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-festival-lineup-poster-hero.webp"
+    }
+  ],
+  "reroll": {
+    "registers": ["safer", "bolder"]
+  },
+  "buildPath": {
+    "value": "comp",
+    "toggle": true
+  },
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A polished AI-analysis dashboard with familiar cards, a score, and a large action button.",
+    "palette": ["#ffffff", "#111827", "#2563eb", "#e5e7eb"],
+    "materials": ["soft card shadows", "dashboard grid"],
+    "viewport": "A centered header sits above two rounded cards: editor left, score and findings right.",
+    "risk": "Easy to understand, but visually interchangeable with many AI tools.",
+    "comp": ".impeccable/mocks/decision/canon.png"
+  },
+  "steer": true
+}

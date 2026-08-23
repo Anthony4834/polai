@@ -1,0 +1,9 @@
+Use case: ui-mockup
+Asset type: high-fidelity desktop web app direction comp, landscape 1440x900
+Primary request: Design the familiar category-standard version of PolAI, an AI political-bias text reviewer, executed with excellent modern product craft and kept simple.
+Structure: a compact centered app header with "PolAI" and "Political bias review"; beneath it a balanced two-column dashboard. The left rounded panel is a large source text editor with two inline highlighted phrases, word count, and a clear "Analyze text" button. The right rounded panel contains a restrained bias percentage, one-sentence analysis summary, and two finding rows with explanation and "Neutral wording". Keep the source editor visually primary and the relationship between each finding and exact highlighted phrase obvious.
+Visual world: the recognizable modern SaaS/AI analysis dashboard played straight. White surface, cool-gray page, near-black text, a single accessible blue action accent, soft borders, light card elevation, disciplined 8px spacing.
+Typography: polished system sans, clear and neutral.
+Exact visible labels where useful: "PolAI", "Political bias review", "Source text", "Analysis", "Analyze text", "2 findings", "Neutral wording".
+Content: realistic short sample text about public policy, presented as sample editor content and not a product claim.
+Constraints: a usable product UI, not marketing. No hero, no illustration, no gradient, no glass, no neon, no gauge, no partisan red-versus-blue scheme, no stock AI sparkle, no decorative bento grid, no excessive empty space, no watermark.

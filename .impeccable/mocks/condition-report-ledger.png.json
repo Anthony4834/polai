@@ -1,0 +1,6 @@
+{
+  "promptFile": "condition-report-ledger.prompt.txt",
+  "useCase": "ui-mockup",
+  "role": "composition probe",
+  "approved": false
+}

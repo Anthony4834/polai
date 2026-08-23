@@ -1,282 +1,242 @@
-import styled from '@emotion/styled';
-import { useRef, useState, type FC, type ReactNode } from 'react';
+import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
+
 import {
-    createHighlights,
-    mergeHighlights,
-    replaceBiases,
-    type AnalysisResponse,
-    type Highlight
-} from '../highlights';
-import { MQ } from '../util';
-import { Panel } from './panel';
-import { Spinner } from './spinner/spinner';
+  createHighlights,
+  mergeHighlights,
+  replaceBiases,
+  type AnalysisResponse,
+  type Highlight,
+} from '../highlights'
 
 const isAnalysisResponse = (value: unknown): value is AnalysisResponse => {
-    if (!value || typeof value !== 'object') return false;
+  if (!value || typeof value !== 'object') return false
 
-    const response = value as Partial<AnalysisResponse>;
-    return typeof response.summary === 'string' && Array.isArray(response.biases);
-};
-
-const analyzeText = async (content: string) => {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '');
-    if (!apiBaseUrl) {
-        throw new Error('VITE_API_BASE_URL is not configured.');
-    }
-
-    const response = await fetch(`${apiBaseUrl}/submission`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ content })
-    });
-    const payload: unknown = await response.json().catch(() => null);
-
-    if (!response.ok) {
-        const message = payload && typeof payload === 'object' && 'error' in payload
-            ? String(payload.error)
-            : 'The text analysis failed.';
-        throw new Error(message);
-    }
-
-    if (!isAnalysisResponse(payload)) {
-        throw new Error('The API returned an invalid analysis.');
-    }
-
-    return {
-        summary: payload.summary,
-        highlights: createHighlights(content, payload.biases)
-    };
-};
-
-// Function to generate the highlighted segments based on the `highlights` state
-const getHighlightedText = (text: string, highlights: Highlight[]) => {
-    const mergedHighlights = mergeHighlights(highlights);
-
-    const parts: ReactNode[] = [];
-    let lastIndex = 0;
-
-    mergedHighlights.forEach(({ start, end, color }) => {
-        // Ensure indices are within bounds
-        start = Math.max(0, start);
-        end = Math.min(text.length, end);
-
-        if (start > lastIndex) {
-            // Add unhighlighted text
-            parts.push(<span key={`text-${lastIndex}-${start}`}>{text.slice(lastIndex, start)}</span>);
-        }
-
-        if (end > start) {
-            // Add highlighted text
-            parts.push(
-                <span key={`highlight-${start}-${end}`} style={{ backgroundColor: color }}>
-                    {text.slice(start, end)}
-                </span>
-            );
-            lastIndex = end;
-        }
-    });
-
-    // Add any remaining unhighlighted text
-    if (lastIndex < text.length) {
-        parts.push(<span key={`text-${lastIndex}-${text.length}`}>{text.slice(lastIndex)}</span>);
-    }
-
-    return parts;
-};
-
-interface InputProps {
-    text: string;
-    setText: (text: string) => void;
-    highlights: Highlight[];
-    setHighlights: (highlights: Highlight[]) => void;
-    isProcessing: boolean;
-    setIsProcessing: (isProcessing: boolean) => void;
-    setSummary: (summary: string) => void;
+  const response = value as Partial<AnalysisResponse>
+  return typeof response.summary === 'string' && Array.isArray(response.biases)
 }
 
-export const Input: FC<InputProps> = ({
-    text,
-    setText,
-    highlights,
-    setHighlights,
-    isProcessing,
-    setIsProcessing,
-    setSummary
-}) => {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const overlayRef = useRef<HTMLDivElement>(null);
-    const [lastAnalyzed, setLastAnalyzed] = useState('');
-    const [error, setError] = useState('');
+const analyzeText = async (content: string) => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')
+  if (!apiBaseUrl) {
+    throw new Error('VITE_API_BASE_URL is not configured.')
+  }
 
-    const reset = () => {
-        setHighlights([]);
-        setSummary('');
-        setLastAnalyzed('');
-        setError('');
-    };
+  const response = await fetch(`${apiBaseUrl}/submission`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content }),
+  })
+  const payload: unknown = await response.json().catch(() => null)
 
-    const handleAnalyze = async () => {
-        setIsProcessing(true);
-        setError('');
+  if (!response.ok) {
+    const message = payload && typeof payload === 'object' && 'error' in payload
+      ? String(payload.error)
+      : 'The text analysis failed.'
+    throw new Error(message)
+  }
 
-        try {
-            const result = await analyzeText(text);
-            setHighlights(result.highlights);
-            setSummary(result.summary);
-            setLastAnalyzed(text);
-        } catch (analysisError) {
-            const message = analysisError instanceof Error
-                ? analysisError.message
-                : 'The text analysis failed.';
-            setError(message);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
+  if (!isAnalysisResponse(payload)) {
+    throw new Error('The API returned an invalid analysis.')
+  }
 
-    return (
-        <Panel>
-            <Overlay ref={overlayRef}>{getHighlightedText(text, highlights)}</Overlay>
-            <TextArea
-                ref={textareaRef}
-                value={text}
-                onChange={e => {
-                    reset();
-                    setText(e.target.value);
-                }}
-                onScroll={() => {
-                    if (overlayRef.current && textareaRef.current) {
-                        overlayRef.current.scrollTop = textareaRef.current.scrollTop;
-                    }
-                }}
-                placeholder='Enter text here...'
-            />
-            {error ? <ErrorMessage role='alert'>{error}</ErrorMessage> : null}
-            <ButtonsSection>
-                <Button
-                    onClick={handleAnalyze}
-                    disabled={isProcessing || !text || lastAnalyzed === text}>
-                    {isProcessing ? <Spinner /> : 'Analyze'}
-                </Button>
-                <Button
-                    onClick={() => {
-                        const { fixedText } = replaceBiases(text, highlights);
-                        setText(fixedText);
-                        setLastAnalyzed('');
-                        setHighlights([]);
-                        setSummary('Suggested neutral wording was applied.');
-                    }}
-                    disabled={highlights.length === 0}>
-                    Fix Biases
-                </Button>
-            </ButtonsSection>
-        </Panel>
-    );
-};
+  return {
+    summary: payload.summary,
+    highlights: createHighlights(content, payload.biases),
+  }
+}
 
-const TextArea = styled.textarea({
-    position: 'absolute',
-    width: '90%',
-    height: '80%',
-    border: '1px solid transparent',
-    borderBottom: '1px solid #ddd',
-    padding: '10px',
-    fontSize: '1.2rem',
-    lineHeight: '2rem',
-    backgroundColor: 'transparent',
-    color: 'transparent',
-    caretColor: 'black',
-    zIndex: 2,
-    overflowY: 'auto',
-    resize: 'none',
-    outline: 'none',
-    fontFamily: 'Arial, sans-serif',
+const getHighlightedText = (
+  text: string,
+  highlights: Highlight[],
+  activeHighlight: number | null,
+) => {
+  const parts: ReactNode[] = []
+  let lastIndex = 0
 
-    [MQ.mobile]: {
-        height: '83%'
+  mergeHighlights(highlights).forEach(({ start: rawStart, end: rawEnd, color }) => {
+    const start = Math.max(0, rawStart)
+    const end = Math.min(text.length, rawEnd)
+
+    if (start > lastIndex) {
+      parts.push(
+        <span key={`text-${lastIndex}-${start}`}>{text.slice(lastIndex, start)}</span>,
+      )
     }
-});
 
-const Overlay = styled.div({
-    position: 'absolute',
-    width: '90%',
-    height: '80%',
-    border: '1px solid transparent',
-    borderBottom: '1px solid #ddd',
-    padding: '10px',
-    fontSize: '1.2rem',
-    lineHeight: '2rem',
-    whiteSpace: 'pre-wrap',
-    wordWrap: 'break-word',
-    color: 'black',
-    zIndex: 1,
-    pointerEvents: 'none',
-    textAlign: 'left',
-    overflowY: 'hidden', // Hide scrollbar on overlay
-    fontFamily: 'Arial, sans-serif',
+    if (end > start) {
+      const sourceIndex = highlights.findIndex(
+        highlight => highlight.start < end && highlight.end > start,
+      )
+      const tone = sourceIndex % 2 === 0 ? 'mint' : 'amber'
+      const style = {
+        '--highlight-color': color,
+        '--highlight-edge': tone === 'mint' ? '#8EAA96' : '#E7BF79',
+      } as CSSProperties
 
-    [MQ.mobile]: {
-        height: '83%'
+      parts.push(
+        <mark
+          className={sourceIndex === activeHighlight ? 'text-mark is-active' : 'text-mark'}
+          key={`highlight-${start}-${end}`}
+          style={style}
+        >
+          {text.slice(start, end)}
+        </mark>,
+      )
+      lastIndex = end
     }
-});
+  })
 
-const ButtonsSection = styled.div({
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '1rem',
-    width: '50%',
-    position: 'absolute',
-    bottom: '2rem',
+  if (lastIndex < text.length) {
+    parts.push(
+      <span key={`text-${lastIndex}-${text.length}`}>{text.slice(lastIndex)}</span>,
+    )
+  }
 
-    [MQ.mobile]: {
-        width: '100%',
-        bottom: '1rem'
+  return parts
+}
+
+interface InputProps {
+  text: string
+  setText: (text: string) => void
+  highlights: Highlight[]
+  setHighlights: (highlights: Highlight[]) => void
+  isProcessing: boolean
+  setIsProcessing: (isProcessing: boolean) => void
+  setSummary: (summary: string) => void
+  activeHighlight: number | null
+  setActiveHighlight: (index: number | null) => void
+  onAnalysisComplete: () => void
+}
+
+export function Input({
+  text,
+  setText,
+  highlights,
+  setHighlights,
+  isProcessing,
+  setIsProcessing,
+  setSummary,
+  activeHighlight,
+  setActiveHighlight,
+  onAnalysisComplete,
+}: InputProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const [lastAnalyzed, setLastAnalyzed] = useState('')
+  const [error, setError] = useState('')
+
+  const resetAnalysis = () => {
+    setHighlights([])
+    setSummary('')
+    setLastAnalyzed('')
+    setError('')
+    setActiveHighlight(null)
+  }
+
+  const handleAnalyze = async () => {
+    setIsProcessing(true)
+    setError('')
+
+    try {
+      const result = await analyzeText(text)
+      setHighlights(result.highlights)
+      setSummary(result.summary)
+      setLastAnalyzed(text)
+      setActiveHighlight(result.highlights.length > 0 ? 0 : null)
+      onAnalysisComplete()
+    } catch (analysisError) {
+      const message = analysisError instanceof Error
+        ? analysisError.message
+        : 'The text analysis failed.'
+      setError(message)
+    } finally {
+      setIsProcessing(false)
     }
-});
+  }
 
-const ErrorMessage = styled.p({
-    position: 'absolute',
-    bottom: '6.5rem',
-    margin: 0,
-    color: '#b42318',
-    fontSize: '0.95rem',
-    textAlign: 'center'
-});
+  const handleApplySuggestions = () => {
+    const { fixedText } = replaceBiases(text, highlights)
+    setText(fixedText)
+    setLastAnalyzed('')
+    setHighlights([])
+    setActiveHighlight(null)
+    setSummary('Suggested neutral wording was applied.')
+  }
 
-const Button = styled.button({
-    padding: '0rem',
-    height: '4rem',
-    width: '10rem',
-    transition: 'all 0.3s',
-    overflow: 'hidden',
-    left: 'calc(50% - 5rem)',
-    borderRadius: '5px',
-    backgroundImage: 'linear-gradient(135deg, #ff6b6b, #ff7979, #ff4d4d)',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
-    outline: 'none',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    filter: 'brightness(1)',
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
+  const analysisIsCurrent = lastAnalyzed === text
 
-    '&:hover': {
-        filter: 'brightness(1.1)'
-    },
+  return (
+    <section className="source-pane" aria-labelledby="source-title">
+      <header className="pane-header source-header">
+        <h2 id="source-title">Source text</h2>
+        <span className="word-count" aria-live="polite">
+          {wordCount} {wordCount === 1 ? 'word' : 'words'}
+        </span>
+      </header>
 
-    '&:active': {
-        filter: 'brightness(0.9)'
-    },
+      <div className="editor-shell">
+        <div ref={overlayRef} className="editor-overlay" aria-hidden="true">
+          {getHighlightedText(text, highlights, activeHighlight)}
+        </div>
+        <textarea
+          ref={textareaRef}
+          className="source-editor"
+          value={text}
+          onChange={event => {
+            resetAnalysis()
+            setText(event.target.value)
+          }}
+          onScroll={() => {
+            if (!overlayRef.current || !textareaRef.current) return
+            overlayRef.current.scrollTop = textareaRef.current.scrollTop
+            overlayRef.current.scrollLeft = textareaRef.current.scrollLeft
+          }}
+          placeholder="Write or paste text to review…"
+          aria-label="Text to review"
+          aria-describedby="editor-help"
+          spellCheck
+        />
+      </div>
 
-    '&:disabled': {
-        filter: 'brightness(0.8)',
-        cursor: 'not-allowed'
-    },
+      {error ? (
+        <p className="editor-error" role="alert">
+          <strong>Analysis unavailable.</strong> {error} Your text is still here—try again.
+        </p>
+      ) : null}
 
-    [MQ.mobile]: {
-        height: '3rem',
-        width: '8rem'
-    }
-});
+      <footer className="source-footer">
+        <p id="editor-help" className="editor-help">
+          {highlights.length > 0
+            ? `${highlights.length} ${highlights.length === 1 ? 'passage' : 'passages'} marked in the source.`
+            : 'Your text stays editable after review.'}
+        </p>
+        <div className="editor-actions">
+          {highlights.length > 0 ? (
+            <button
+              className="button button-secondary"
+              type="button"
+              onClick={handleApplySuggestions}
+              disabled={isProcessing}
+            >
+              Apply all suggestions
+            </button>
+          ) : null}
+          <button
+            className="button button-primary"
+            type="button"
+            onClick={handleAnalyze}
+            disabled={isProcessing || !text.trim() || analysisIsCurrent}
+          >
+            {isProcessing ? (
+              <>
+                <span className="button-loader" aria-hidden="true" />
+                Analyzing
+              </>
+            ) : 'Analyze text'}
+          </button>
+        </div>
+      </footer>
+    </section>
+  )
+}

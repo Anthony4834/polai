@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-23T10:47:27.4082304Z",
+  "title": "Design System: PolAI",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#FDFCFA",
+        "tonalRamp": ["oklch(15% 0.003 84.6)", "oklch(27% 0.003 84.6)", "oklch(39% 0.003 84.6)", "oklch(51% 0.003 84.6)", "oklch(63% 0.003 84.6)", "oklch(75% 0.003 84.6)", "oklch(87% 0.003 84.6)", "oklch(95% 0.003 84.6)"]
+      },
+      "paper-muted": {
+        "role": "neutral",
+        "displayName": "Muted Paper",
+        "canonical": "#F8F7F3",
+        "tonalRamp": ["oklch(15% 0.005 95.1)", "oklch(27% 0.005 95.1)", "oklch(39% 0.005 95.1)", "oklch(51% 0.005 95.1)", "oklch(63% 0.005 95.1)", "oklch(75% 0.005 95.1)", "oklch(87% 0.005 95.1)", "oklch(95% 0.005 95.1)"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Inspection Ink",
+        "canonical": "#171A18",
+        "tonalRamp": ["oklch(15% 0.006 156.7)", "oklch(27% 0.006 156.7)", "oklch(39% 0.006 156.7)", "oklch(51% 0.006 156.7)", "oklch(63% 0.006 156.7)", "oklch(75% 0.006 156.7)", "oklch(87% 0.006 156.7)", "oklch(95% 0.006 156.7)"]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#626762",
+        "tonalRamp": ["oklch(15% 0.010 145.4)", "oklch(27% 0.010 145.4)", "oklch(39% 0.010 145.4)", "oklch(51% 0.010 145.4)", "oklch(63% 0.010 145.4)", "oklch(75% 0.010 145.4)", "oklch(87% 0.010 145.4)", "oklch(95% 0.010 145.4)"]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Accessible Faint Ink",
+        "canonical": "#6F746F",
+        "tonalRamp": ["oklch(15% 0.010 145.4)", "oklch(27% 0.010 145.4)", "oklch(39% 0.010 145.4)", "oklch(51% 0.010 145.4)", "oklch(63% 0.010 145.4)", "oklch(75% 0.010 145.4)", "oklch(87% 0.010 145.4)", "oklch(95% 0.010 145.4)"]
+      },
+      "mineral": {
+        "role": "primary",
+        "displayName": "Mineral Green",
+        "canonical": "#315443",
+        "tonalRamp": ["oklch(15% 0.050 162.1)", "oklch(27% 0.050 162.1)", "oklch(39% 0.050 162.1)", "oklch(51% 0.050 162.1)", "oklch(63% 0.050 162.1)", "oklch(75% 0.050 162.1)", "oklch(87% 0.050 162.1)", "oklch(95% 0.050 162.1)"]
+      },
+      "mineral-dark": {
+        "role": "primary",
+        "displayName": "Deep Mineral Green",
+        "canonical": "#223D30",
+        "tonalRamp": ["oklch(15% 0.041 162.2)", "oklch(27% 0.041 162.2)", "oklch(39% 0.041 162.2)", "oklch(51% 0.041 162.2)", "oklch(63% 0.041 162.2)", "oklch(75% 0.041 162.2)", "oklch(87% 0.041 162.2)", "oklch(95% 0.041 162.2)"]
+      },
+      "mint": {
+        "role": "secondary",
+        "displayName": "Inspection Mint",
+        "canonical": "#E4EEE5",
+        "tonalRamp": ["oklch(15% 0.016 148.4)", "oklch(27% 0.016 148.4)", "oklch(39% 0.016 148.4)", "oklch(51% 0.016 148.4)", "oklch(63% 0.016 148.4)", "oklch(75% 0.016 148.4)", "oklch(87% 0.016 148.4)", "oklch(95% 0.016 148.4)"]
+      },
+      "mint-edge": {
+        "role": "secondary",
+        "displayName": "Inspection Mint Edge",
+        "canonical": "#8EAA96",
+        "tonalRamp": ["oklch(15% 0.042 154.1)", "oklch(27% 0.042 154.1)", "oklch(39% 0.042 154.1)", "oklch(51% 0.042 154.1)", "oklch(63% 0.042 154.1)", "oklch(75% 0.042 154.1)", "oklch(87% 0.042 154.1)", "oklch(95% 0.042 154.1)"]
+      },
+      "amber": {
+        "role": "tertiary",
+        "displayName": "Annotation Amber",
+        "canonical": "#FDF2DF",
+        "tonalRamp": ["oklch(15% 0.028 81.5)", "oklch(27% 0.028 81.5)", "oklch(39% 0.028 81.5)", "oklch(51% 0.028 81.5)", "oklch(63% 0.028 81.5)", "oklch(75% 0.028 81.5)", "oklch(87% 0.028 81.5)", "oklch(95% 0.028 81.5)"]
+      },
+      "amber-edge": {
+        "role": "tertiary",
+        "displayName": "Annotation Amber Edge",
+        "canonical": "#E7BF79",
+        "tonalRamp": ["oklch(15% 0.099 80.7)", "oklch(27% 0.099 80.7)", "oklch(39% 0.099 80.7)", "oklch(51% 0.099 80.7)", "oklch(63% 0.099 80.7)", "oklch(75% 0.099 80.7)", "oklch(87% 0.099 80.7)", "oklch(95% 0.099 80.7)"]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline Rule",
+        "canonical": "#E2E2E0",
+        "tonalRamp": ["oklch(15% 0.003 106.5)", "oklch(27% 0.003 106.5)", "oklch(39% 0.003 106.5)", "oklch(51% 0.003 106.5)", "oklch(63% 0.003 106.5)", "oklch(75% 0.003 106.5)", "oklch(87% 0.003 106.5)", "oklch(95% 0.003 106.5)"]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Hairline Rule",
+        "canonical": "#CCCECA",
+        "tonalRamp": ["oklch(15% 0.006 128.5)", "oklch(27% 0.006 128.5)", "oklch(39% 0.006 128.5)", "oklch(51% 0.006 128.5)", "oklch(63% 0.006 128.5)", "oklch(75% 0.006 128.5)", "oklch(87% 0.006 128.5)", "oklch(95% 0.006 128.5)"]
+      },
+      "error": {
+        "role": "functional",
+        "displayName": "Functional Error",
+        "canonical": "#A33B31",
+        "tonalRamp": ["oklch(15% 0.140 28.6)", "oklch(27% 0.140 28.6)", "oklch(39% 0.140 28.6)", "oklch(51% 0.140 28.6)", "oklch(63% 0.140 28.6)", "oklch(75% 0.140 28.6)", "oklch(87% 0.140 28.6)", "oklch(95% 0.140 28.6)"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Analysis Measure",
+        "purpose": "The percentage of source text marked; never a decorative hero or gauge."
+      },
+      "headline": {
+        "displayName": "Wordmark",
+        "purpose": "Compact PolAI identification in the masthead."
+      },
+      "title": {
+        "displayName": "Quiet Title",
+        "purpose": "Short empty-state and local headings."
+      },
+      "body": {
+        "displayName": "Source Prose",
+        "purpose": "The dominant long-form reading and editing treatment."
+      },
+      "label": {
+        "displayName": "Instrument Label",
+        "purpose": "Compact region, state, count, and replacement labels."
+      }
+    },
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "140ms ease",
+        "purpose": "Button, finding, and active-evidence state transitions."
+      },
+      {
+        "name": "analysis-reveal",
+        "value": "180ms ease-out",
+        "purpose": "A four-pixel fade-and-rise when analysis content becomes available."
+      },
+      {
+        "name": "loader-spin",
+        "value": "700ms linear infinite",
+        "purpose": "Compact inline analysis-button progress only."
+      },
+      {
+        "name": "loading-pulse",
+        "value": "1.25s ease-in-out infinite alternate",
+        "purpose": "Quiet analysis skeleton rules while the result is pending."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms; 1 iteration",
+        "purpose": "Suppress nonessential animation and smooth scrolling when reduced motion is requested."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "workspace-tight",
+        "value": "1100px"
+      },
+      {
+        "name": "sequential",
+        "value": "900px"
+      },
+      {
+        "name": "compact",
+        "value": "620px"
+      },
+      {
+        "name": "stack-actions",
+        "value": "410px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "PolAI Masthead",
+      "kind": "nav",
+      "description": "Quiet product identification above the continuous workspace.",
+      "html": "<header class=\"ds-masthead\"><a class=\"ds-wordmark\" href=\"#\">PolAI</a><span class=\"ds-masthead-context\">Political bias review</span></header>",
+      "css": ".ds-masthead { display: flex; align-items: center; height: 64px; padding: 0 32px; border-bottom: 1px solid var(--rule); color: var(--ink); background: var(--paper); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; } .ds-wordmark { color: var(--ink); font-size: 1.7rem; font-weight: 760; letter-spacing: -0.04em; line-height: 1; text-decoration: none; } .ds-wordmark:focus-visible { outline: 2px solid var(--mineral); outline-offset: 3px; } .ds-masthead-context { margin-left: auto; color: var(--ink-muted); font-size: 0.75rem; font-weight: 620; letter-spacing: 0.045em; }"
+    },
+    {
+      "name": "Analyze Text Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The compact outlined primary action at the editor footer.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Analyze text</button>",
+      "css": ".ds-button-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--mineral); border-radius: 3px; color: var(--mineral); background: transparent; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.015em; cursor: pointer; transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease; } .ds-button-primary:hover:not(:disabled) { color: #fff; background: var(--mineral-dark); border-color: var(--mineral-dark); } .ds-button-primary:focus-visible { outline: 2px solid var(--mineral); outline-offset: 3px; } .ds-button-primary:disabled { color: #8d918d; background: #edece8; border-color: #e1e0dc; cursor: not-allowed; }"
+    },
+    {
+      "name": "Apply Suggestions Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The writer-controlled bulk replacement action shown after findings exist.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">Apply all suggestions</button>",
+      "css": ".ds-button-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--rule-strong); border-radius: 3px; color: var(--mineral); background: transparent; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.015em; cursor: pointer; transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease; } .ds-button-secondary:hover:not(:disabled) { background: var(--mint); border-color: var(--mint-edge); } .ds-button-secondary:focus-visible { outline: 2px solid var(--mineral); outline-offset: 3px; } .ds-button-secondary:disabled { color: #8d918d; background: #edece8; border-color: #e1e0dc; cursor: not-allowed; }"
+    },
+    {
+      "name": "Source Field",
+      "kind": "input",
+      "description": "The borderless, generous source-writing surface that owns the workspace.",
+      "html": "<textarea class=\"ds-source-field\" aria-label=\"Text to review\">The source text remains the interface.</textarea>",
+      "css": ".ds-source-field { display: block; width: 100%; min-height: 220px; margin: 0; padding: 36px 48px; resize: vertical; border: 0; color: var(--ink); caret-color: var(--mineral); background: var(--paper); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: clamp(1.17rem, 1.4vw, 1.36rem); font-weight: 400; line-height: 1.78; letter-spacing: -0.008em; } .ds-source-field:focus-visible { outline: 0; box-shadow: inset 0 0 0 2px var(--mineral); } .ds-source-field::selection { background: rgba(49, 84, 67, 0.18); }"
+    },
+    {
+      "name": "Linked Source Highlights",
+      "kind": "custom",
+      "refersTo": "highlight-primary",
+      "description": "Alternating evidence fills that map exact source spans to numbered findings.",
+      "html": "<p class=\"ds-source-sample\">The <mark class=\"ds-text-mark ds-text-mark-mint ds-is-active\">exact source phrase</mark> stays linked to its note, while <mark class=\"ds-text-mark ds-text-mark-amber\">the next finding</mark> uses the alternate tone.</p>",
+      "css": ".ds-source-sample { margin: 0; color: var(--ink); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 1.2rem; line-height: 1.78; } .ds-text-mark { padding: 0 0.08em; border-radius: 2px; color: inherit; box-decoration-break: clone; -webkit-box-decoration-break: clone; } .ds-text-mark-mint { background: var(--mint); box-shadow: inset 0 -1px 0 var(--mint-edge); } .ds-text-mark-amber { background: var(--amber); box-shadow: inset 0 -1px 0 var(--amber-edge); } .ds-text-mark-mint.ds-is-active { box-shadow: inset 0 -1px 0 var(--mint-edge), 0 0 0 1px var(--mint-edge); } .ds-text-mark-amber.ds-is-active { box-shadow: inset 0 -1px 0 var(--amber-edge), 0 0 0 1px var(--amber-edge); }"
+    },
+    {
+      "name": "Complete Status Chip",
+      "kind": "chip",
+      "refersTo": "status-complete",
+      "description": "The restrained pill exception used for analysis status.",
+      "html": "<span class=\"ds-status-complete\">Complete</span>",
+      "css": ".ds-status-complete { display: inline-flex; align-items: center; min-height: 24px; padding: 0 8px; border: 1px solid #b8c9bc; border-radius: 999px; color: var(--mineral); background: var(--mint); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.65rem; font-weight: 720; letter-spacing: 0.04em; line-height: 1; text-transform: uppercase; }"
+    },
+    {
+      "name": "Analysis Summary",
+      "kind": "custom",
+      "description": "A tabular measure and concise conclusion without a gauge or scorecard shell.",
+      "html": "<section class=\"ds-analysis-summary\"><p class=\"ds-summary-measure\"><strong>44.07%</strong><span>of text marked</span></p><h3>Summary</h3><p>The passage uses loaded wording that presents outcomes as settled judgments.</p></section>",
+      "css": ".ds-analysis-summary { padding: 40px 32px 34px; border-bottom: 1px solid var(--rule); color: var(--ink); background: var(--paper-muted); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; } .ds-summary-measure { display: flex; align-items: baseline; gap: 10px; margin: 0 0 34px; } .ds-summary-measure strong { color: var(--mineral); font-size: clamp(2.4rem, 4vw, 4rem); font-weight: 500; letter-spacing: -0.04em; line-height: 0.9; font-variant-numeric: tabular-nums; } .ds-summary-measure span { color: var(--ink-muted); font-size: 0.75rem; font-weight: 620; letter-spacing: 0.025em; } .ds-analysis-summary h3 { margin: 0; color: var(--ink-muted); font-size: 0.68rem; font-weight: 760; letter-spacing: 0.075em; line-height: 1; text-transform: uppercase; } .ds-analysis-summary > p:last-child { margin: 13px 0 0; font-size: 1rem; line-height: 1.65; }"
+    },
+    {
+      "name": "Active Finding",
+      "kind": "custom",
+      "description": "A numbered reason and neutral replacement linked to the active source phrase.",
+      "html": "<article class=\"ds-finding ds-is-active\"><button class=\"ds-finding-phrase\" type=\"button\"><span class=\"ds-finding-number\">1</span><span>“reckless administration”</span></button><p class=\"ds-finding-reason\">The adjective frames the administration as irresponsible before presenting evidence.</p><div class=\"ds-neutral-wording\"><span>Neutral wording</span><p>administration</p></div></article>",
+      "css": ".ds-finding { padding: 26px 32px 28px; border-bottom: 1px solid var(--rule); color: var(--ink); background: var(--paper-muted); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; transition: background-color 140ms ease, box-shadow 140ms ease; } .ds-finding.ds-is-active { background: rgba(255,255,255,0.7); box-shadow: inset 0 0 0 1px var(--mint-edge); } .ds-finding-phrase { display: inline-flex; align-items: center; gap: 10px; padding: 2px 4px 2px 2px; border: 0; border-radius: 2px; color: var(--ink); background: var(--mint); font: inherit; font-size: 0.97rem; font-weight: 600; line-height: 1.35; text-align: left; cursor: pointer; box-shadow: 0 0 0 1px var(--mint-edge); } .ds-finding-phrase:hover { box-shadow: 0 0 0 2px var(--mint-edge); } .ds-finding-phrase:focus-visible { outline: 2px solid var(--mineral); outline-offset: 3px; } .ds-finding-number { display: inline-flex; flex: 0 0 21px; align-items: center; justify-content: center; width: 21px; height: 21px; border: 1px solid var(--mint-edge); border-radius: 50%; background: var(--paper); font-size: 0.65rem; font-weight: 760; line-height: 1; } .ds-finding-reason { margin: 15px 0 0 32px; color: #4f5450; font-size: 0.84rem; line-height: 1.58; } .ds-neutral-wording { margin: 20px 0 0 32px; padding-left: 12px; border-left: 1px solid var(--rule-strong); } .ds-neutral-wording > span { color: var(--ink-faint); font-size: 0.63rem; font-weight: 720; letter-spacing: 0.07em; text-transform: uppercase; } .ds-neutral-wording p { margin: 6px 0 0; color: var(--mineral-dark); font-size: 0.84rem; line-height: 1.5; }"
+    },
+    {
+      "name": "Quiet Empty State",
+      "kind": "custom",
+      "description": "A deliberate instruction with one inspection rule and no illustration.",
+      "html": "<section class=\"ds-empty-state\"><span class=\"ds-empty-rule\" aria-hidden=\"true\"></span><h3>Ready when you are.</h3><p>Run an analysis to connect each finding to its exact phrase in the source.</p></section>",
+      "css": ".ds-empty-state { max-width: 22rem; padding: 32px; color: var(--ink); background: var(--paper-muted); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; } .ds-empty-rule { display: block; width: 42px; height: 1px; margin-bottom: 22px; background: var(--mineral); } .ds-empty-state h3 { margin: 0; font-size: 1.35rem; font-weight: 500; letter-spacing: -0.025em; } .ds-empty-state p { margin: 12px 0 0; color: var(--ink-muted); font-size: 0.84rem; line-height: 1.6; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Condition Report",
+    "overview": "PolAI is a calm, exact writing instrument. The source text is the interface, not content placed inside an ornamental application shell. The visual system borrows the discipline of an archival condition report: matte inspection paper, compact labels, hairline rules, and numbered observations that appear only where attention is required.\n\nThe interface stays neutral and nonpartisan. Mineral green carries actions and completion; mint and amber distinguish linked findings without implying political sides or severity. Space, scale, and alignment create hierarchy before containers or decoration do.",
+    "keyCharacteristics": [
+      "Continuous, editor-first workspace with a narrow evidence rail.",
+      "Matte paper surfaces separated by hairline rules, with no elevation.",
+      "System sans typography that shifts from generous reading copy to compact inspection labels.",
+      "Exact source spans linked to numbered findings by matching mint or amber treatments.",
+      "Direct, neutral controls that keep every revision under the writer's control."
+    ],
+    "rules": [
+      {
+        "name": "The Nonpartisan Color Rule",
+        "body": "Color may link evidence, signal interaction state, or report system status; it must never encode a political side.",
+        "section": "colors"
+      },
+      {
+        "name": "The Matched Evidence Rule",
+        "body": "Every marked source span and its corresponding finding use the same fill and edge treatment, with explicit numbering and labels as non-color cues.",
+        "section": "colors"
+      },
+      {
+        "name": "The Paper Restraint Rule",
+        "body": "Large surfaces stay within the paper neutrals. Accent fills belong to compact evidence and state treatments.",
+        "section": "colors"
+      },
+      {
+        "name": "The Source Leads Rule",
+        "body": "Source prose receives the largest sustained reading treatment; analysis copy never competes with it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Instrument Label Rule",
+        "body": "Uppercase labels identify regions and states, not marketing messages or long sentences.",
+        "section": "typography"
+      },
+      {
+        "name": "The Continuous Workspace Rule",
+        "body": "Desktop editor and analysis regions share one viewport-height field, one seam, and aligned headers.",
+        "section": "layout"
+      },
+      {
+        "name": "The Task-Order Rule",
+        "body": "Compact layouts preserve the workflow order: write, act, then review.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Inspection Rule",
+        "body": "Surfaces are flat at rest. Use rules, tone, and active outlines—not drop shadows—to establish structure.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Exception Shape Rule",
+        "body": "Rounded silhouettes must explain status, index, or compact interaction; they are not decorative containers.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do keep source text visually dominant and editable throughout review.",
+      "Do connect every finding to its exact phrase with matched tone, edge, number, and label.",
+      "Do use paper tone, hairline rules, and spacing to organize the workspace.",
+      "Do keep explanations and suggested neutral wording compact, direct, and scannable.",
+      "Do preserve visible focus, sufficient contrast, semantic regions, and reduced-motion-safe behavior."
+    ],
+    "donts": [
+      "Don't introduce giant cards, floating dashboard panels, gradients, gauges, or decorative imagery.",
+      "Don't use red/blue, left/right, or any partisan color code for findings.",
+      "Don't apply excessive rounding; square regions and compact 2-3px controls are the default.",
+      "Don't add shadows for elevation or decoration.",
+      "Don't let analysis chrome, percentages, or status treatments compete with the source text."
+    ]
+  }
+}

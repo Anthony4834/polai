@@ -1,143 +1,111 @@
-import styled from '@emotion/styled';
-import { forwardRef, type FC } from 'react';
-import clipboard from '../assets/clipboard.png';
-import { calculateBiasPercent, type Highlight } from '../highlights';
-import { MQ } from '../util';
-import { Panel } from './panel';
+import { forwardRef, type CSSProperties } from 'react'
+
+import { calculateBiasPercent, type Highlight } from '../highlights'
 
 interface AnalysisProps {
-    highlights: Highlight[];
-    text: string;
-    summary: string;
+  text: string
+  summary: string
+  highlights: Highlight[]
+  isProcessing: boolean
+  activeHighlight: number | null
+  onHighlightFocus: (index: number | null) => void
 }
 
-const percentToColor = (percent: number) => {
-    if (percent < 30) return '#8BC34A';
-    if (percent < 50) return '#debc6d';
-    if (percent < 75) return '#FFA726';
-    return '#FF6F61';
-};
+export const Analysis = forwardRef<HTMLElement, AnalysisProps>(function Analysis(
+  {
+    text,
+    summary,
+    highlights,
+    isProcessing,
+    activeHighlight,
+    onHighlightFocus,
+  },
+  ref,
+) {
+  const hasAnalysis = Boolean(summary) || highlights.length > 0
+  const status = isProcessing ? 'Reviewing' : hasAnalysis ? 'Complete' : 'Ready'
+  const percentage = calculateBiasPercent(text, highlights)
 
-export const Analysis = forwardRef<HTMLDivElement, AnalysisProps>((props, ref) => {
-    const { highlights } = props;
+  return (
+    <aside ref={ref} className="analysis-pane" aria-labelledby="analysis-title">
+      <header className="pane-header analysis-header">
+        <h2 id="analysis-title">Analysis</h2>
+        <span className={`status-chip status-${status.toLowerCase()}`}>{status}</span>
+      </header>
 
-    return (
-        <AnalysisBase isEmpty={highlights.length === 0} ref={ref}>
-            <Content {...props} />
-        </AnalysisBase>
-    );
-});
+      {isProcessing ? (
+        <div className="analysis-loading" aria-live="polite" aria-busy="true">
+          <p>Reviewing language and context…</p>
+          <span />
+          <span />
+          <span />
+        </div>
+      ) : !hasAnalysis ? (
+        <div className="analysis-empty">
+          <span className="empty-rule" aria-hidden="true" />
+          <h3>Ready when you are.</h3>
+          <p>Run an analysis to connect each finding to its exact phrase in the source.</p>
+        </div>
+      ) : (
+        <div className="analysis-content" aria-live="polite">
+          <section className="analysis-summary" aria-labelledby="summary-title">
+            <p className="summary-measure">
+              <strong>{percentage}%</strong>
+              <span>of text marked</span>
+            </p>
+            <h3 id="summary-title">Summary</h3>
+            <p>{summary}</p>
+            {highlights.length === 0 ? (
+              <p className="no-findings">No biased passages were marked.</p>
+            ) : null}
+          </section>
 
-const Content: FC<AnalysisProps> = props => {
-    const { highlights, summary } = props;
-    const percent = calculateBiasPercent(props.text, highlights);
+          {highlights.length > 0 ? (
+            <section className="findings" aria-labelledby="findings-title">
+              <div className="findings-heading">
+                <h3 id="findings-title">Findings</h3>
+                <span>{highlights.length}</span>
+              </div>
+              <ol className="finding-list">
+                {highlights.map((highlight, index) => {
+                  const tone = index % 2 === 0 ? 'mint' : 'amber'
+                  const style = {
+                    '--finding-fill': highlight.color,
+                    '--finding-edge': tone === 'mint' ? '#8EAA96' : '#E7BF79',
+                  } as CSSProperties
 
-    if (!summary)
-        return (
-            <EmptyState>
-                <p>Enter some text to get started</p>
-            </EmptyState>
-        );
-
-    if (highlights.length === 0)
-        return (
-            <EmptyState>
-                <img src={clipboard} alt='clipboard' />
-                <Summary>{summary}</Summary>
-                <PercentBiased color={percentToColor(Number(percent))}>{percent}%</PercentBiased>
-            </EmptyState>
-        );
-
-    return (
-        <>
-            <PercentBiased color={percentToColor(Number(percent))}>{percent}%</PercentBiased>
-            <Summary>{summary}</Summary>
-            <HighlightEntryContainer>
-                {highlights.map((highlight, index) => (
-                    <HighlightEntry key={index} backgroundColor={highlight.color}>
-                        {highlight.reason}
-                    </HighlightEntry>
-                ))}
-            </HighlightEntryContainer>
-        </>
-    );
-};
-
-const AnalysisBase = styled(Panel)<{ isEmpty: boolean }>(({ isEmpty }) => ({
-    rowGap: '1rem',
-    justifyContent: isEmpty ? 'center' : 'flex-start',
-
-    '& > h2': {
-        marginTop: '1rem'
-    },
-
-    [MQ.mobile]: {
-        width: '90%',
-        height: '80vh',
-        marginTop: '2rem',
-        padding: '2%'
-    }
-}));
-
-const PercentBiased = styled('h2')<{ color: string }>(({ color }) => ({
-    fontSize: '2rem',
-    position: 'relative',
-    color,
-    margin: '0',
-    padding: '0'
-}));
-
-const Summary = styled('p')({
-    fontSize: '1.2rem',
-    margin: '0',
-    padding: '0',
-
-    [MQ.mobile]: {
-        color: 'black',
-        fontSize: '1rem',
-        padding: '0 0.5rem'
-    }
-});
-
-const HighlightEntryContainer = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.5rem',
-    marginTop: '1rem',
-    overflowY: 'auto'
-});
-
-const HighlightEntry = styled('div')<{ backgroundColor: string }>(({ backgroundColor }) => ({
-    padding: '1rem',
-    backgroundColor,
-    borderRadius: '0.5rem',
-    fontSize: '1.2rem',
-
-    [MQ.mobile]: {
-        fontSize: '1rem'
-    }
-}));
-
-const EmptyState = styled('div')({
-    position: 'relative',
-    color: 'gray',
-    margin: 'auto',
-    textAlign: 'center',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    rowGap: '1.5rem',
-
-    '& > img': {
-        position: 'relative',
-        left: '-3%',
-        width: '35%'
-    },
-
-    '& > p': {
-        position: 'relative',
-        fontSize: '1.5rem'
-    }
-});
+                  return (
+                    <li
+                      className={activeHighlight === index ? 'finding is-active' : 'finding'}
+                      key={`${highlight.start}-${highlight.end}-${highlight.line}`}
+                      style={style}
+                      onMouseEnter={() => onHighlightFocus(index)}
+                    >
+                      <button
+                        className="finding-phrase"
+                        type="button"
+                        onFocus={() => onHighlightFocus(index)}
+                        onClick={() => onHighlightFocus(index)}
+                        aria-label={`Finding ${index + 1}: ${highlight.line}`}
+                      >
+                        <span className="finding-number" aria-hidden="true">
+                          {index + 1}
+                        </span>
+                        <span>“{highlight.line}”</span>
+                      </button>
+                      <p className="finding-reason">{highlight.reason}</p>
+                      <div className="neutral-wording">
+                        <span>Neutral wording</span>
+                        <p>{highlight.fixed}</p>
+                      </div>
+                    </li>
+                  )
+                })}
+              </ol>
+            </section>
+          ) : null}
+        </div>
+      )}
+    </aside>
+  )
+})

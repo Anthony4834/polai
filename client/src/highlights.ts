@@ -16,25 +16,8 @@ export interface AnalysisResponse {
 }
 
 const HIGHLIGHT_COLORS = [
-    '#FF6F61',
-    '#FFD97D',
-    '#8BC34A',
-    '#FFA726',
-    '#64B5F6',
-    '#BA68C8',
-    '#4DD0E1',
-    '#FFB74D',
-    '#AED581',
-    '#FF8A65',
-    '#90CAF9',
-    '#81D4FA',
-    '#E57373',
-    '#FFF176',
-    '#DCE775',
-    '#4DB6AC',
-    '#9575CD',
-    '#F06292',
-    '#FFCC80'
+    '#E4EEE5',
+    '#FDF2DF'
 ];
 
 const sortValidHighlights = (highlights: Highlight[]) => {

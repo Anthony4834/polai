@@ -1,56 +1,59 @@
-/** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import React, { useRef, useState } from 'react';
-import type { Highlight } from '../highlights';
-import { MQ } from '../util';
-import { Analysis } from './analysis';
-import { Input } from './input';
+import { useRef, useState } from 'react'
 
-const Container = styled.div({
-    position: 'relative',
-    width: '100vw',
-    height: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    columnGap: '2rem',
-    backgroundColor: '#f5f5f5',
+import type { Highlight } from '../highlights'
+import { Analysis } from './analysis'
+import { Input } from './input'
 
-    [MQ.mobile]: {
-        height: 'unset',
-        flexDirection: 'column',
-        rowGap: '0rem',
-        overflowY: 'scroll',
-        paddingBottom: '1vh'
-    }
-});
+export function Main() {
+  const [text, setText] = useState('')
+  const [summary, setSummary] = useState('')
+  const [highlights, setHighlights] = useState<Highlight[]>([])
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [activeHighlight, setActiveHighlight] = useState<number | null>(null)
+  const analysisRef = useRef<HTMLElement>(null)
 
-export const Main: React.FC = () => {
-    const [text, setText] = useState('');
-    const [summary, setSummary] = useState('');
-    const [highlights, setHighlights] = useState<Highlight[]>([]);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const analysisRef = useRef<HTMLDivElement>(null);
+  const showAnalysis = () => {
+    if (!window.matchMedia('(max-width: 900px)').matches) return
 
-    const processingMiddleware = (val: boolean) => {
-        setIsProcessing(val);
-        if (!val && analysisRef.current) {
-            analysisRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'auto'
+      : 'smooth'
+    analysisRef.current?.scrollIntoView({ behavior, block: 'start' })
+  }
 
-    return (
-        <Container>
-            <Input
-                text={text}
-                setText={setText}
-                highlights={highlights}
-                setHighlights={setHighlights}
-                isProcessing={isProcessing}
-                setIsProcessing={processingMiddleware}
-                setSummary={val => setSummary(val)}
-            />
-            <Analysis ref={analysisRef} highlights={highlights} text={text} summary={summary} />
-        </Container>
-    );
-};
+  return (
+    <div className="app-shell">
+      <header className="masthead">
+        <a className="wordmark" href="/" aria-label="PolAI home">
+          PolAI
+        </a>
+        <span className="masthead-context">Political bias review</span>
+      </header>
+
+      <main className="workspace">
+        <h1 className="sr-only">Review political bias in your writing</h1>
+        <Input
+          text={text}
+          setText={setText}
+          setSummary={setSummary}
+          highlights={highlights}
+          setHighlights={setHighlights}
+          isProcessing={isProcessing}
+          setIsProcessing={setIsProcessing}
+          activeHighlight={activeHighlight}
+          setActiveHighlight={setActiveHighlight}
+          onAnalysisComplete={showAnalysis}
+        />
+        <Analysis
+          ref={analysisRef}
+          text={text}
+          summary={summary}
+          highlights={highlights}
+          isProcessing={isProcessing}
+          activeHighlight={activeHighlight}
+          onHighlightFocus={setActiveHighlight}
+        />
+      </main>
+    </div>
+  )
+}
