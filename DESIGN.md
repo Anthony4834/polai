@@ -23,11 +23,13 @@ colors-dark:
   paper: "#171916"
   paper-muted: "#1D201C"
   ink: "#F1F0EB"
-  ink-muted: "#B5BAB2"
-  ink-faint: "#969C94"
+  ink-muted: "#A3AAA2"
+  ink-faint: "#8C928A"
   mineral: "#9FC5AD"
   mineral-strong: "#B6D7C1"
   mineral-fill: "#315443"
+  button-ink: "#8FA597"
+  button-text-on-fill: "#D8DDD9"
   action-tint: "#26372D"
   action-tint-edge: "#668774"
   focus-surface: "#202720"
@@ -53,7 +55,7 @@ typography:
     letterSpacing: "-0.04em"
   title:
     fontFamily: 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    fontSize: "1.35rem"
+    fontSize: "1.25rem"
     fontWeight: 500
     letterSpacing: "-0.025em"
   body:
@@ -135,7 +137,7 @@ The interface stays neutral and nonpartisan. Mineral green carries actions and f
 
 ## Colors
 
-The palette feels like warm paper and inspection ink: restrained neutrals, one mineral action color, and two evidence tones. Dark mode keeps the same material world with warm charcoal surfaces, off-white ink, a lighter mineral action color, and deeper graphite and stone evidence fills. System preference is the default; an explicit user choice persists.
+The palette feels like warm paper and inspection ink: restrained neutrals, one mineral action color, and two evidence tones. Dark mode keeps the same material world with warm charcoal surfaces, off-white ink, a lighter mineral focus color, quieter action labels, and deeper graphite and stone evidence fills. System preference is the default; an explicit user choice persists.
 
 ### Primary
 
@@ -180,7 +182,7 @@ The palette feels like warm paper and inspection ink: restrained neutrals, one m
 - **Headline:** The PolAI wordmark is compact, heavy, and tightly tracked.
 - **Title:** Quiet empty-state headings use moderate weight and close tracking.
 - **Body:** The source editor uses the most generous size and leading in the system. Analysis prose is smaller and denser so it remains subordinate to the writing.
-- **Label:** Region titles, section headings, category tags, and neutral-wording captions are compact, weighty, and set in sentence case.
+- **Label:** Region titles, section headings, category tags, and neutral-wording captions are compact, weighty, and set in sentence case. Reusable role sizes are 11px for tags, 12px for captions, 13px for controls, 14px for analysis prose, and 15px for quoted findings.
 
 ### Named Rules
 
@@ -219,8 +221,9 @@ The form language is rectilinear and exact. Text marks and phrase bands use gent
 ### Masthead
 
 - **Character:** Quiet identification, not navigation chrome.
-- **Structure:** A compact matte bar with the wordmark, a direct one-sentence product description, a native theme selector, and one lower hairline.
+- **Structure:** A compact matte bar with the wordmark, a direct one-sentence product description, an icon-led System/Light/Dark menu, and one lower hairline.
 - **Theme:** System, Light, and Dark are available. System is the default, and an explicit choice persists without a flash of the wrong theme.
+- **Menu behavior:** Opening the menu focuses the selected option. Arrow keys, Home, End, Escape, outside click, and focus return follow native menu expectations.
 - **Responsive:** It becomes sticky on sequential layouts; compact screens move the description below the wordmark and selector.
 
 ### Source Editor
@@ -236,6 +239,7 @@ The form language is rectilinear and exact. Text marks and phrase bands use gent
 - **Shape:** Compact outlined rectangles with 3px corners and a 40px minimum height; mobile controls grow to 44px.
 - **Primary:** Mineral text and border on a transparent paper ground; hover fills with dark mineral and reverses to white text.
 - **Secondary:** Mineral text with a strong neutral border; hover adds a pale mineral action tint.
+- **Dark mode:** Action labels use a quieter mineral tone than focus and measurement accents; filled hover labels use softened off-white instead of pure white.
 - **Focus / Disabled:** Visible 2px mineral focus outline with 3px offset. Disabled controls use quiet neutral fill, border, and text without relying on opacity alone.
 
 ### Analysis Summary

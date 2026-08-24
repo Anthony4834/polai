@@ -36,7 +36,7 @@ related_targets: ["client/src/components/main.tsx","client/src/components/input.
 | Ingredient | Recorded treatment | Medium |
 | --- | --- | --- |
 | Page ground | warm paper `#FDFCFA` or charcoal `#171916`, selected from system preference by default | semantic HTML + CSS |
-| Masthead | matte ground, one lower rule, wordmark, product description, and native System/Light/Dark selector | `header` + CSS |
+| Masthead | matte ground, one lower rule, wordmark, product description, and keyboard-complete icon menu for System/Light/Dark | `header` + CSS |
 | Wordmark | heavy workhorse sans, about 28px desktop | semantic text |
 | Workspace seam | one 1px cool-gray vertical rule | CSS grid border |
 | Source field | dominant, flat, no card shell; 18-20px prose at 1.75 line height | textarea + synchronized semantic overlay |
